@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Organizame</string>
+    <string name="action_settings">Settings</string>
+    <string name="titulo">Titulo</string>
+    <string name="descripcion">Descripcion</string>
+    <string name="editar">Editar</string>
+    <string name="eliminar">Eliminar</string>
+</resources>
