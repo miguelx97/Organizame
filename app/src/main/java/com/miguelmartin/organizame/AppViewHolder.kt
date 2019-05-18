@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.miguelmartin.organizame.entity.Tarea
 
-class TareaViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
+class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     RecyclerView.ViewHolder(inflater.inflate(R.layout.item, parent, false)) {
+
     private var tvTitulo: TextView? = null
     private var tvDescripcion: TextView? = null
 

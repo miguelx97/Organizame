@@ -5,10 +5,10 @@ import com.miguelmartin.organizame.entity.Tarea
 
 @Dao
 interface AppDao : IDatabase {
-    @Query("SELECT id,nombre,descripcion,importancia,fecha FROM tarea")
+    @Query("SELECT id,titulo,descripcion,importancia,fecha FROM tarea")
     override fun obtenerTodos(): List<Tarea>
 
-    @Query("SELECT id, nombre, descripcion, importancia, fecha FROM tarea WHERE nombre LIKE :texto OR descripcion LIKE :texto")
+    @Query("SELECT id, titulo, descripcion, importancia, fecha FROM tarea WHERE titulo LIKE :texto OR descripcion LIKE :texto")
     override fun obtener(texto: String): List<Tarea>
 
     @Insert

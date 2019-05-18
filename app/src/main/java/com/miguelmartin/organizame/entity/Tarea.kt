@@ -7,9 +7,11 @@ import java.util.*
 
 @Entity
 data class Tarea(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo val titulo: String?,
     @ColumnInfo val descripcion: String?,
     @ColumnInfo val importancia: Int?,
     @ColumnInfo val fecha: Date?
+
+
 )
