@@ -6,6 +6,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+    <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"/>
+
     <android.support.v7.widget.RecyclerView
             android:clipToPadding="false"
             android:layout_width="match_parent"
@@ -15,9 +19,7 @@
             android:background="@color/grisClaro"/>
 
 
-    <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar" android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"/>
+
 
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/fbAdd"

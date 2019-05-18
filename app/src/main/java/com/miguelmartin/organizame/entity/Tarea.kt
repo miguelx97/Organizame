@@ -1,17 +1,15 @@
 package com.miguelmartin.organizame.entity
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
-@Entity
+const val NOMBRE_TABLA = "tarea"
+
 data class Tarea(
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    @ColumnInfo val titulo: String?,
-    @ColumnInfo val descripcion: String?,
-    @ColumnInfo val importancia: Int?,
-    @ColumnInfo val fecha: Date?
+    val id: Int,
+    val titulo: String?,
+    val descripcion: String?,
+    val importancia: Int?,
+    val fecha: Date?
 
 
 )

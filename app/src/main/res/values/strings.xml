@@ -5,4 +5,5 @@
     <string name="descripcion">Descripcion</string>
     <string name="editar">Editar</string>
     <string name="eliminar">Eliminar</string>
+    <string name="anadir">Añadir</string>
 </resources>
