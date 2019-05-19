@@ -1,10 +1,10 @@
 package com.miguelmartin.organizame
 
-import android.content.ContentValues
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.widget.Toast
+import com.miguelmartin.organizame.bbdd.DbPersistencia
 import com.miguelmartin.organizame.entity.Tarea
 import kotlinx.android.synthetic.main.activity_add_tarea.*
 import kotlinx.android.synthetic.main.activity_add_tarea.toolbar
@@ -21,7 +21,7 @@ class AddTareaActivity : AppCompatActivity() {
         setSupportActionBar(toolbar as Toolbar?)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        id=intent.getStringExtra("")
+//        id=intent.getStringExtra("")
 
 
         if (id!=null){
@@ -44,14 +44,14 @@ class AddTareaActivity : AppCompatActivity() {
         val fecha = Date()
         val tarea:Tarea = Tarea(0,titulo,descripcion,1,fecha);
 
-        var values = ContentValues()
-        values.put("", etTitulo.text.toString())
-        values.put("", etDescripcion.text.toString())
+        var dbPersistencia = DbPersistencia(this)
 
-        var res:Int = 1
+
+        var res:Int = 0
         var action:String
 
         if (id==null){
+            res = dbPersistencia.insertar(tarea)
             action = "añadida"
         } else{
             action = "modificada"

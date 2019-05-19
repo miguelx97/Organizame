@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import com.miguelmartin.organizame.bbdd.DbPersistencia
 import com.miguelmartin.organizame.entity.Tarea
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,7 +27,9 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.title = "Tareas"
 
         //LISTA DE TAREAS
-        val tareas = getLists()
+        var dbPersistencia = DbPersistencia(this)
+
+        val tareas = /*getLists()*/  dbPersistencia.getTodos()
         recyclerView.layoutManager = LinearLayoutManager(this)  //https://www.youtube.com/watch?v=NQWVpm5vdA8
         val adapter = AppAdapter(tareas)
         recyclerView.adapter = adapter
