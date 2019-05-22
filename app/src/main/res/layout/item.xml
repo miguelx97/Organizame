@@ -46,7 +46,7 @@
             <TextView
                     android:text="12 dic"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/tvFecha" android:gravity="center"/>
+                    android:layout_height="wrap_content" android:id="@+id/tvHora" android:gravity="center"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

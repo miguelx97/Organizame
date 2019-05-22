@@ -9,7 +9,9 @@
 
     <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbar" android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"/>
+            layout="@layout/toolbar" android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
             android:layout_width="wrap_content"
@@ -26,7 +28,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/btnAnadir" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            app:layout_constraintHorizontal_bias="0.699" android:layout_marginBottom="120dp"
+            app:layout_constraintHorizontal_bias="0.726" android:layout_marginBottom="72dp"
             app:layout_constraintBottom_toBottomOf="parent"/>
     <EditText
             android:layout_width="wrap_content"
@@ -45,6 +47,34 @@
             android:layout_height="wrap_content"
             android:id="@+id/swPrioritario" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:layout_marginTop="96dp" app:layout_constraintTop_toBottomOf="@+id/etDescripcion"
-            app:layout_constraintHorizontal_bias="0.231"/>
+            android:layout_marginTop="80dp" app:layout_constraintTop_toBottomOf="@+id/etDescripcion"
+            app:layout_constraintHorizontal_bias="0.202"/>
+    <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp" app:srcCompat="@drawable/calendario"
+            android:id="@+id/ivCalendario" android:layout_marginTop="176dp"
+            app:layout_constraintTop_toBottomOf="@+id/etDescripcion"
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintHorizontal_bias="0.288" app:layout_constraintStart_toEndOf="@+id/tvHora"/>
+    <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp" app:srcCompat="@drawable/reloj"
+            android:id="@+id/ivReloj" android:layout_marginTop="176dp"
+            app:layout_constraintTop_toBottomOf="@+id/etDescripcion" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintHorizontal_bias="0.204"/>
+    <TextView
+            android:text="01 dic"
+            android:layout_width="wrap_content"
+            android:layout_height="23dp"
+            android:id="@+id/tvFecha" app:layout_constraintStart_toEndOf="@+id/ivCalendario"
+            android:layout_marginStart="20dp" android:gravity="center" android:layout_marginTop="184dp"
+            app:layout_constraintTop_toBottomOf="@+id/etDescripcion"/>
+    <TextView
+            android:text="00:00"
+            android:layout_width="wrap_content"
+            android:layout_height="23dp"
+            android:id="@+id/tvHora" app:layout_constraintStart_toEndOf="@+id/ivReloj"
+            android:layout_marginStart="20dp" android:gravity="center" android:layout_marginTop="184dp"
+            app:layout_constraintTop_toBottomOf="@+id/etDescripcion"/>
 </android.support.constraint.ConstraintLayout>
