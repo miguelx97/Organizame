@@ -1,15 +1,16 @@
 package com.miguelmartin.organizame.entity
 
+import java.io.Serializable
 import java.util.*
 
 const val NOMBRE_TABLA = "tarea"
 
-data class Tarea(
-    val id: Int,
-    val titulo: String?,
-    val descripcion: String?,
-    val importancia: Int?,
-    val fecha: Date?
+class Tarea(
+    var id: Int = 0,
+    var titulo: String? = "",
+    var descripcion: String? = "",
+    var prioridad: Int? = 1,
+    var fecha: Date? = null
 
 
-)
+): Serializable

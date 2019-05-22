@@ -8,7 +8,7 @@ import com.miguelmartin.organizame.entity.Tarea
 class AppAdapter(private val list: List<Tarea>)
     : RecyclerView.Adapter<AppViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {    //https://medium.com/@hinchman_amanda/working-with-recyclerview-in-android-kotlin-84a62aef94ec
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return AppViewHolder(inflater, parent)
     }

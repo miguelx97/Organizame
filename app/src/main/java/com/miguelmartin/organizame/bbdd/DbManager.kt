@@ -12,7 +12,7 @@ import android.widget.Toast
 const val DB_TABLE= "Tareas"
 const val COL_TITULO= "Titulo"
 const val COL_DESCRIPCION= "Dascripcion"
-const val COL_IMPORTANCIA= "Importancia"
+const val COL_PRIORIDAD= "Prioridad"
 const val COL_FECHA= "Fecha"
 const val COL_ID= "Id"
 
@@ -24,7 +24,7 @@ class DbManager {       //TODO: meter las columnas con sus tipos en un map para 
             " $COL_ID INTEGER PRIMARY KEY, " +
             " $COL_TITULO TEXT, " +
             " $COL_DESCRIPCION TEXT, " +
-            " $COL_IMPORTANCIA INTEGER, " +
+            " $COL_PRIORIDAD INTEGER, " +
             " $COL_FECHA TEXT " +
             " );"
     var sqlDB:SQLiteDatabase?=null

@@ -17,11 +17,9 @@ class DbPersistencia {
         dbManager = DbManager(context)
     }
 
-
-
     fun getTodos():List<Tarea> {
         var list = ArrayList<Tarea>()
-        var projection = arrayOf(COL_ID, COL_TITULO, COL_DESCRIPCION, COL_IMPORTANCIA, COL_FECHA)
+        var projection = arrayOf(COL_ID, COL_TITULO, COL_DESCRIPCION, COL_PRIORIDAD, COL_FECHA)
         val selectionArgs= arrayOf("%")
         val cursor = dbManager.customQuery(projection, "$COL_TITULO like ? ", selectionArgs, COL_TITULO)
 
@@ -37,7 +35,7 @@ class DbPersistencia {
                         cursor.getInt(cursor.getColumnIndex(COL_ID)),
                         cursor.getString(cursor.getColumnIndex(COL_TITULO)),
                         cursor.getString(cursor.getColumnIndex(COL_DESCRIPCION)),
-                        cursor.getInt(cursor.getColumnIndex(COL_IMPORTANCIA)),
+                        cursor.getInt(cursor.getColumnIndex(COL_PRIORIDAD)),
                         stringToFecha(cursor.getString(cursor.getColumnIndex(COL_FECHA)))
                     )
 
@@ -55,12 +53,19 @@ class DbPersistencia {
         var values = ContentValues()
         values.put(COL_TITULO, tarea.titulo)
         values.put(COL_DESCRIPCION, tarea.descripcion)
-        values.put(COL_IMPORTANCIA, tarea.importancia)
+        values.put(COL_PRIORIDAD, tarea.prioridad)
         values.put(COL_FECHA, fechaToString(tarea.fecha))
 
         val res = dbManager.insertar(values)
 
         return res
+    }
+
+    fun eliminar(tarea:Tarea){
+        var dbManager= DbManager(this.context!!)
+        val selectionArgs= arrayOf(tarea.id.toString())
+        dbManager.eliminar("ID=?", selectionArgs)
+
     }
 
 

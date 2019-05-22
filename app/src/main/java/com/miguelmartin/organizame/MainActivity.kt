@@ -27,12 +27,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.title = "Tareas"
 
         //LISTA DE TAREAS
-        var dbPersistencia = DbPersistencia(this)
-
-        val tareas = /*getLists()*/  dbPersistencia.getTodos()
-        recyclerView.layoutManager = LinearLayoutManager(this)  //https://www.youtube.com/watch?v=NQWVpm5vdA8
-        val adapter = AppAdapter(tareas)
-        recyclerView.adapter = adapter
+        cargarItems()
 
         //Float button
         fbAdd.setOnClickListener { view ->
@@ -41,6 +36,21 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        cargarItems()
+    }
+
+    private fun cargarItems() {
+        var dbPersistencia = DbPersistencia(this)
+        val tareas = dbPersistencia.getTodos()
+        recyclerView.layoutManager = LinearLayoutManager(this)  //www.youtube.com/watch?v=NQWVpm5vdA8
+        val adapter = AppAdapter(tareas)
+        recyclerView.adapter = adapter
+    }
+
+
 
     fun getLists(): ArrayList<Tarea> {
         var lists = ArrayList<Tarea>()
