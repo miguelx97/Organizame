@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.miguelmartin.organizame.bbdd.DB_TABLE
+import com.miguelmartin.organizame.constantes.formatoFecha
+import com.miguelmartin.organizame.constantes.formatoHora
 import com.miguelmartin.organizame.entity.Tarea
 import java.text.SimpleDateFormat
 
@@ -24,19 +26,19 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         tvTitulo = itemView.findViewById(R.id.tvTitulo)
         tvDescripcion = itemView.findViewById(R.id.tvDescripcion)
         tvHora = itemView.findViewById(R.id.tvHora)
-        tvFecha = itemView.findViewById(R.id.tvHora)
+        tvFecha = itemView.findViewById(R.id.tvFecha)
         lyImportancia = itemView.findViewById(R.id.lyImportancia)
 
         itemView.setOnClickListener {
-            var intent = Intent(itemView.context, AddTareaActivity::class.java)
+            var intent = Intent(itemView.context, DetalleActivity::class.java)
             intent.putExtra(DB_TABLE, tarea)
             itemView.context.startActivity(intent)
         }
         tvTitulo?.text = tarea.titulo
         tvDescripcion?.text = tarea.descripcion
         tvDescripcion?.text = tarea.descripcion
-        tvHora?.text = SimpleDateFormat("hh:mm").format(tarea.fecha)
-        tvFecha?.text = SimpleDateFormat("dd MMM").format(tarea.fecha)
+        tvHora?.text = formatoHora.format(tarea.fecha)
+        tvFecha?.text = formatoFecha.format(tarea.fecha)
 
         if(tarea.prioridad == 2){
             lyImportancia?.setBackgroundResource(R.color.colorAccent)

@@ -50,13 +50,7 @@ class DbPersistencia {
     }
 
     fun insertar(tarea:Tarea):Int{
-        var values = ContentValues()
-        values.put(COL_TITULO, tarea.titulo)
-        values.put(COL_DESCRIPCION, tarea.descripcion)
-        values.put(COL_PRIORIDAD, tarea.prioridad)
-        values.put(COL_FECHA, fechaToString(tarea.fecha))
-
-        val res = dbManager.insertar(values)
+        val res = dbManager.insertar(getValues(tarea))
 
         return res
     }
@@ -68,16 +62,38 @@ class DbPersistencia {
 
     }
 
+    fun modificar(tarea:Tarea):Int{
+
+        var selectionArgs= arrayOf(tarea.id.toString())
+        val res = dbManager.modificar(getValues(tarea), "$COL_ID=?", selectionArgs)
+
+        return res
+    }
+
+    fun getValues(tarea:Tarea): ContentValues {
+        var values = ContentValues()
+        values.put(COL_TITULO, tarea.titulo)
+        values.put(COL_DESCRIPCION, tarea.descripcion)
+        values.put(COL_PRIORIDAD, tarea.prioridad)
+        values.put(COL_FECHA, fechaToString(tarea.fecha))
+        return values
+    }
 
 
-
-    val format = SimpleDateFormat("dd/MM/yyyy hh:mm")
+    val format = SimpleDateFormat("dd/MM/yyyy kk:mm")
 
     fun fechaToString(date: Date?) : String {
-        return format.format(date)
-    }
-    fun stringToFecha(string:String?) : Date {
-        return format.parse(string)
+        var fecha:String
+        if (date == null) fecha = ""
+        else fecha = format.format(date)
 
+        return fecha
+    }
+
+    fun stringToFecha(string:String?) : Date {
+        var fecha:Date
+        if (string == "") fecha = Date()
+        else fecha = format.parse(string)
+        return fecha
     }
 }

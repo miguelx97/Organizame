@@ -19,7 +19,7 @@
                 android:layout_marginBottom="10dp" android:layout_marginRight="3dp"/>
         <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="280dp"
+                android:layout_width="270dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="3pt">
             <TextView
@@ -37,16 +37,16 @@
         </LinearLayout>
         <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="70dp"
+                android:layout_width="match_parent"
                 android:layout_height="70dp" android:gravity="center">
             <TextView
-                    android:text="00:00"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/tvHora" android:gravity="center"/>
+                    android:layout_height="wrap_content" android:id="@+id/tvFecha"
+                    android:gravity="right|center_vertical"/>
             <TextView
-                    android:text="12 dic"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/tvHora" android:gravity="center"/>
+                    android:layout_height="wrap_content" android:id="@+id/tvHora"
+                    android:gravity="right|center_vertical"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
