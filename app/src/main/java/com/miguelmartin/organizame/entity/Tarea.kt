@@ -13,4 +13,9 @@ class Tarea(
     var fecha: Date? = null
 
 
-): Serializable
+): Serializable {
+
+    override fun toString(): String {
+        return "Tarea(id=$id, titulo=$titulo, descripcion=$descripcion, prioridad=$prioridad, fecha=$fecha)"
+    }
+}

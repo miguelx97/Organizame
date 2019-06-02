@@ -31,14 +31,13 @@
                     android:text="@string/descripcion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/tvDescripcion"
-                    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"
                     android:layout_marginTop="5dp" android:layout_marginBottom="10dp" android:paddingLeft="10dp"
             />
         </LinearLayout>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="70dp" android:gravity="center">
+                android:layout_height="match_parent" android:gravity="center" android:id="@+id/lyFechaHora">
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/tvFecha"

@@ -26,9 +26,6 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar as Toolbar?)
         supportActionBar!!.title = "Tareas"
 
-        //LISTA DE TAREAS
-        cargarItems()
-
         //Float button
         fbAdd.setOnClickListener { view ->
             //ir a AddTareaActivity

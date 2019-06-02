@@ -41,7 +41,7 @@ class DbPersistencia {
 
                 list.add(tarea)
 
-                Log.w("tarea:", tarea.toString())
+                Log.w("get tarea ${tarea.id}:", tarea.toString())
 
             } while (cursor.moveToNext())
         }
@@ -50,12 +50,14 @@ class DbPersistencia {
     }
 
     fun insertar(tarea:Tarea):Int{
+        Log.w("insertar tarea ${tarea.id}:", tarea.toString())
         val res = dbManager.insertar(getValues(tarea))
 
         return res
     }
 
     fun eliminar(tarea:Tarea){
+        Log.w("eliminar tarea ${tarea.id}:", tarea.toString())
         var dbManager= DbManager(this.context!!)
         val selectionArgs= arrayOf(tarea.id.toString())
         dbManager.eliminar("ID=?", selectionArgs)
@@ -63,7 +65,7 @@ class DbPersistencia {
     }
 
     fun modificar(tarea:Tarea):Int{
-
+        Log.w("modificar tarea ${tarea.id}:", tarea.toString())
         var selectionArgs= arrayOf(tarea.id.toString())
         val res = dbManager.modificar(getValues(tarea), "$COL_ID=?", selectionArgs)
 
@@ -80,20 +82,17 @@ class DbPersistencia {
     }
 
 
-    val format = SimpleDateFormat("dd/MM/yyyy kk:mm")
+    val format = SimpleDateFormat("dd/MM/yyyy kk:mm:ss")
 
     fun fechaToString(date: Date?) : String {
-        var fecha:String
-        if (date == null) fecha = ""
-        else fecha = format.format(date)
-
+        var fecha:String = ""
+        if (date != null) fecha = format.format(date)
         return fecha
     }
 
-    fun stringToFecha(string:String?) : Date {
-        var fecha:Date
-        if (string == "") fecha = Date()
-        else fecha = format.parse(string)
+    fun stringToFecha(string:String?) : Date? {
+        var fecha: Date? = null
+        if (string != "") fecha = format.parse(string)
         return fecha
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
+import android.view.View
 import android.widget.Toast
 import com.miguelmartin.organizame.bbdd.DB_TABLE
 import com.miguelmartin.organizame.bbdd.DbPersistencia
@@ -37,8 +38,13 @@ class DetalleActivity : AppCompatActivity() {
 //            if (tarea.prioridad == 2) {
 //                swPrioritario.setChecked(true)
 //            }
-        tvHora.text = formatoHora.format(tarea.fecha)
-        tvFecha.text = formatoFecha.format(tarea.fecha)
+
+        if(tarea.fecha != null) {
+            tvFecha.text = formatoFecha.format(tarea.fecha)
+            if((tarea.fecha)!!.seconds != 0){
+                tvHora.text = formatoHora.format(tarea.fecha)
+            }
+        }
 
         btnEliminar.setOnClickListener{
             val dbPersistencia = DbPersistencia(this)

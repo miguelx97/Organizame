@@ -26,6 +26,7 @@ class AddTareaActivity : AppCompatActivity() {
     var id:Int? = null
     var cal = Calendar.getInstance()
     var tarea = Tarea()
+    var fechaVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +41,23 @@ class AddTareaActivity : AppCompatActivity() {
             btnAnadir.setText("Modificar")
             etTitulo.setText(tarea.titulo)
             etDescripcion.setText(tarea.descripcion)
-            tvFecha.setText(formatoFecha.format(tarea.fecha))
-            tvHora.setText(formatoHora.format(tarea.fecha))
+
+            if(tarea.fecha != null) {
+                tvFecha.text = formatoFecha.format(tarea.fecha)
+                if((tarea.fecha)!!.seconds != 0){
+                    tvHora.text = formatoHora.format(tarea.fecha)
+                } else{
+                    tvHora.text = getString(R.string.escoge_hora)
+                }
+
+                fechaVisible = true
+                btnFechaHora.setText("Eliminar fecha y hora")
+                lyFechaHora.setVisibility(View.VISIBLE)
+
+                cal.setTime(tarea.fecha)
+
+            }
+
             if(tarea.prioridad == 2){
                 swPrioritario.setChecked(true)
             }
@@ -49,8 +65,6 @@ class AddTareaActivity : AppCompatActivity() {
 
         } else{                                                 //NUEVA
             supportActionBar!!.title = "Nueva Tarea"
-            tvHora.text = formatoHora.format(cal.time)
-            tvFecha.text = formatoFecha.format(cal.time)
         }
 
         btnAnadir.setOnClickListener {
@@ -65,20 +79,22 @@ class AddTareaActivity : AppCompatActivity() {
             ivRelojOnClick()
         }
 
-        var visible = true
         var view = 0
 
         btnFechaHora.setOnClickListener {
-            if(visible){
-                visible = false
-                view = View.GONE
+            if(fechaVisible){
+                fechaVisible = false
+                view = View.INVISIBLE
                 btnFechaHora.setText("Añadir fecha y hora")
             } else{
-                visible = true
+                fechaVisible = true
                 view = View.VISIBLE
                 btnFechaHora.setText("Eliminar fecha y hora")
             }
             lyFechaHora.setVisibility(view)
+            cal = Calendar.getInstance()
+            tvFecha.text = getString(R.string.escoge_fecha)
+            tvHora.text = getString(R.string.escoge_hora)
         }
 
     }
@@ -86,18 +102,20 @@ class AddTareaActivity : AppCompatActivity() {
 
 
     private fun anadirModificar() {
-
         tarea.titulo = etTitulo.text.toString()
         tarea.descripcion = etDescripcion.text.toString()
-        tarea.fecha = cal.getTime()
+        var fecha: Date? = null
+        if(!tvFecha.text.equals(getString(R.string.escoge_fecha)) || !tvHora.text.equals(getString(R.string.escoge_hora))){
+            fecha = cal.getTime()
+        }
+
+        tarea.fecha = fecha
 
         if (swPrioritario.isChecked){
             tarea.prioridad=2
         }
 
-
         val dbPersistencia = DbPersistencia(this)
-
 
         var res:Int = 0
         var action:String
@@ -119,13 +137,11 @@ class AddTareaActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun ivRelojOnClick() {
         val timeSetListener = TimePickerDialog.OnTimeSetListener{timePicker, hour, minute ->
             cal.set(Calendar.HOUR_OF_DAY, hour)
             cal.set(Calendar.MINUTE, minute)
-
+            cal.set(Calendar.SECOND, 1)
             tvHora.text = formatoHora.format(cal.time)
         }
 
@@ -138,13 +154,11 @@ class AddTareaActivity : AppCompatActivity() {
         val day = cal.get(Calendar.DAY_OF_MONTH)
 
         val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{view, mYear, mMonth, mDay ->
-            cal.set(Calendar.MONTH, mMonth)
-            cal.set(Calendar.DAY_OF_MONTH, mDay)
+            cal.set(mYear, mMonth, mDay, 0, 0, 0)
             tvFecha.text = formatoFecha.format(cal.time)
         },year,month,day)
 
         datePickerDialog.show()
     }
-
 
 }

@@ -3,6 +3,7 @@ package com.miguelmartin.organizame
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -20,6 +21,7 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     private var tvHora: TextView? = null
     private var tvFecha: TextView? = null
     private var lyImportancia: LinearLayout? = null
+    private var lyFechaHora: LinearLayout? = null
 
     fun bind(tarea: Tarea) {
 
@@ -28,6 +30,7 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         tvHora = itemView.findViewById(R.id.tvHora)
         tvFecha = itemView.findViewById(R.id.tvFecha)
         lyImportancia = itemView.findViewById(R.id.lyImportancia)
+        lyFechaHora = itemView.findViewById(R.id.lyFechaHora)
 
         itemView.setOnClickListener {
             var intent = Intent(itemView.context, DetalleActivity::class.java)
@@ -35,10 +38,17 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
             itemView.context.startActivity(intent)
         }
         tvTitulo?.text = tarea.titulo
-        tvDescripcion?.text = tarea.descripcion
-        tvDescripcion?.text = tarea.descripcion
-        tvHora?.text = formatoHora.format(tarea.fecha)
-        tvFecha?.text = formatoFecha.format(tarea.fecha)
+        if(!tarea.descripcion.equals(""))tvDescripcion?.text = tarea.descripcion
+        else tvDescripcion?.setVisibility(View.GONE)
+        if(tarea.fecha != null) {
+            tvHora?.text = formatoHora.format(tarea.fecha)
+            tvFecha?.text = formatoFecha.format(tarea.fecha)
+            if((tarea.fecha)!!.seconds == 0){
+                tvHora?.setVisibility(View.GONE)
+            }
+        } else{
+            lyFechaHora?.setVisibility(View.GONE)
+        }
 
         if(tarea.prioridad == 2){
             lyImportancia?.setBackgroundResource(R.color.colorAccent)
