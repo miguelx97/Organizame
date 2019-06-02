@@ -59,11 +59,11 @@ class DbManager {       //TODO: meter las columnas con sus tipos en un map para 
         return id.toInt()
     }
 
-    fun customQuery(projection:Array<String>, selection:String, selectionArgs:Array<String>, sorOrder:String):Cursor{
+    fun customQuery(projection:Array<String>, selection:String, selectionArgs:Array<String>, sortOrder:String):Cursor{
         var qb=SQLiteQueryBuilder()
         qb.tables = DB_TABLE
 
-        val cursor = qb.query(sqlDB,projection,selection, selectionArgs, null,null,sorOrder)
+        val cursor = qb.query(sqlDB,projection,selection, selectionArgs, null,null,sortOrder)
 
         return cursor
     }

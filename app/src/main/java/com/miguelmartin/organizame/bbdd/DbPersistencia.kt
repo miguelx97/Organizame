@@ -21,7 +21,7 @@ class DbPersistencia {
         var list = ArrayList<Tarea>()
         var projection = arrayOf(COL_ID, COL_TITULO, COL_DESCRIPCION, COL_PRIORIDAD, COL_FECHA)
         val selectionArgs= arrayOf("%")
-        val cursor = dbManager.customQuery(projection, "$COL_TITULO like ? ", selectionArgs, COL_TITULO)
+        val cursor = dbManager.customQuery(projection, "$COL_TITULO like ? ", selectionArgs, COL_FECHA)
 
         list.clear()
 
@@ -81,9 +81,7 @@ class DbPersistencia {
         return values
     }
 
-
-    val format = SimpleDateFormat("dd/MM/yyyy kk:mm:ss")
-
+    val format = SimpleDateFormat("yyMMddkkmmss")
     fun fechaToString(date: Date?) : String {
         var fecha:String = ""
         if (date != null) fecha = format.format(date)
