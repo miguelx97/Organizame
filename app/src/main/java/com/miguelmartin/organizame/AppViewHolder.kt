@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.miguelmartin.organizame.bbdd.DB_TABLE
+import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
 import com.miguelmartin.organizame.constantes.formatoFecha
 import com.miguelmartin.organizame.constantes.formatoHora
 import com.miguelmartin.organizame.entity.Tarea
@@ -34,7 +34,7 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
 
         itemView.setOnClickListener {
             var intent = Intent(itemView.context, DetalleActivity::class.java)
-            intent.putExtra(DB_TABLE, tarea)
+            intent.putExtra(DB_TABLE_TAREAS, tarea)
             itemView.context.startActivity(intent)
         }
         tvTitulo?.text = tarea.titulo

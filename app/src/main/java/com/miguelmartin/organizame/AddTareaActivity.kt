@@ -2,23 +2,24 @@ package com.miguelmartin.organizame
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Intent
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.transition.TransitionManager
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.widget.Toast
-import com.miguelmartin.organizame.bbdd.DB_TABLE
-import com.miguelmartin.organizame.bbdd.DbPersistencia
+import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
 import com.miguelmartin.organizame.constantes.formatoFecha
 import com.miguelmartin.organizame.constantes.formatoHora
 import com.miguelmartin.organizame.entity.Tarea
 import kotlinx.android.synthetic.main.activity_add_tarea.*
 import kotlinx.android.synthetic.main.activity_add_tarea.toolbar
-import java.text.SimpleDateFormat
 import java.util.*
 import android.view.View
+import android.graphics.drawable.GradientDrawable
+import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
+import petrov.kristiyan.colorpicker.ColorPicker
+
+
 
 
 class AddTareaActivity : AppCompatActivity() {
@@ -35,8 +36,8 @@ class AddTareaActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
 
-        if (intent.getSerializableExtra(DB_TABLE) != null){     //MODIFICAR
-            tarea = intent.getSerializableExtra(DB_TABLE) as Tarea
+        if (intent.getSerializableExtra(DB_TABLE_TAREAS) != null){     //MODIFICAR
+            tarea = intent.getSerializableExtra(DB_TABLE_TAREAS) as Tarea
             supportActionBar!!.title = "Modificar tarea"
             btnAnadir.setText("Modificar")
             etTitulo.setText(tarea.titulo)
@@ -79,26 +80,27 @@ class AddTareaActivity : AppCompatActivity() {
             ivRelojOnClick()
         }
 
-        var view = 0
-
         btnFechaHora.setOnClickListener {
-            if(fechaVisible){
-                fechaVisible = false
-                view = View.INVISIBLE
-                btnFechaHora.setText("Añadir fecha y hora")
-            } else{
-                fechaVisible = true
-                view = View.VISIBLE
-                btnFechaHora.setText("Eliminar fecha y hora")
-            }
-            lyFechaHora.setVisibility(view)
-            cal = Calendar.getInstance()
-            tvFecha.text = getString(R.string.escoge_fecha)
-            tvHora.text = getString(R.string.escoge_hora)
+            addFechaHora()
         }
-
     }
 
+    private fun addFechaHora() {
+        var view: Int
+        if (fechaVisible) {
+            fechaVisible = false
+            view = View.INVISIBLE
+            btnFechaHora.setText("Añadir fecha y hora")
+        } else {
+            fechaVisible = true
+            view = View.VISIBLE
+            btnFechaHora.setText("Eliminar fecha y hora")
+        }
+        lyFechaHora.setVisibility(view)
+        cal = Calendar.getInstance()
+        tvFecha.text = getString(R.string.escoge_fecha)
+        tvHora.text = getString(R.string.escoge_hora)
+    }
 
 
     private fun anadirModificar() {
@@ -115,9 +117,9 @@ class AddTareaActivity : AppCompatActivity() {
             tarea.prioridad=2
         }
 
-        val dbPersistencia = DbPersistencia(this)
+        val dbPersistencia = DbPersistenciaTareas(this)
 
-        var res:Int = 0
+        var res:Int
         var action:String
 
         if (id==null){

@@ -2,8 +2,18 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.miguelmartin.organizame.MainActivity">
-    <item android:id="@+id/action_settings"
-          android:title="@string/action_settings"
+    <item android:id="@+id/itemNuevaCategoria"
+          android:title="Categorías"
           android:orderInCategory="100"
-          app:showAsAction="never"/>
+          app:showAsAction="always|withText" android:icon="@drawable/carpeta"/>
+
+    <item android:id="@+id/itemCategorias"
+          android:title="Categorías"
+          android:orderInCategory="100"
+          app:showAsAction="always|withText" android:icon="@drawable/carpeta_blanca"/>
+
+    <item
+            android:id="@+id/mSearch"
+            android:icon="@drawable/lupa"
+            android:title="Search" app:actionViewClass="android.widget.SearchView" app:showAsAction="always"/>
 </menu>

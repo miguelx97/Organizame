@@ -7,20 +7,20 @@ import com.miguelmartin.organizame.entity.Tarea
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DbPersistencia {
+class DbPersistenciaTareas {
 
     var context: Context
     var dbManager:DbManager
 
     constructor(context: Context){
         this.context = context
-        dbManager = DbManager(context)
+        dbManager = DbManager(context, DB_TABLE_TAREAS)
     }
 
-    fun getTodos():List<Tarea> {
+    fun getItems(filtro:String):List<Tarea> {
         var list = ArrayList<Tarea>()
         var projection = arrayOf(COL_ID, COL_TITULO, COL_DESCRIPCION, COL_PRIORIDAD, COL_FECHA)
-        val selectionArgs= arrayOf("%")
+        val selectionArgs= arrayOf(filtro)
         val cursor = dbManager.customQuery(projection, "$COL_TITULO like ? ", selectionArgs, COL_FECHA)
 
         list.clear()
@@ -58,7 +58,6 @@ class DbPersistencia {
 
     fun eliminar(tarea:Tarea){
         Log.w("eliminar tarea ${tarea.id}:", tarea.toString())
-        var dbManager= DbManager(this.context!!)
         val selectionArgs= arrayOf(tarea.id.toString())
         dbManager.eliminar("ID=?", selectionArgs)
 
@@ -81,7 +80,7 @@ class DbPersistencia {
         return values
     }
 
-    val format = SimpleDateFormat("yyMMddkkmmss")
+    val format = SimpleDateFormat("yyyyMMddkkmmss")
     fun fechaToString(date: Date?) : String {
         var fecha:String = ""
         if (date != null) fecha = format.format(date)

@@ -4,21 +4,16 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
-import android.view.View
 import android.widget.Toast
-import com.miguelmartin.organizame.bbdd.DB_TABLE
-import com.miguelmartin.organizame.bbdd.DbPersistencia
+import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
+import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
 import com.miguelmartin.organizame.constantes.formatoFecha
 import com.miguelmartin.organizame.constantes.formatoHora
 import com.miguelmartin.organizame.entity.Tarea
-import kotlinx.android.synthetic.main.activity_add_tarea.*
 import kotlinx.android.synthetic.main.activity_add_tarea.toolbar
 import kotlinx.android.synthetic.main.activity_add_tarea.tvFecha
 import kotlinx.android.synthetic.main.activity_add_tarea.tvHora
 import kotlinx.android.synthetic.main.activity_detalle.*
-import kotlinx.android.synthetic.main.activity_main.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 class DetalleActivity : AppCompatActivity() {
 
@@ -31,7 +26,7 @@ class DetalleActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = "Tarea"
 
-        var tarea = intent.getSerializableExtra(DB_TABLE) as Tarea
+        var tarea = intent.getSerializableExtra(DB_TABLE_TAREAS) as Tarea
 
         tvTitulo.setText(tarea.titulo)
         tvDescripcion.setText(tarea.descripcion)
@@ -47,7 +42,7 @@ class DetalleActivity : AppCompatActivity() {
         }
 
         btnEliminar.setOnClickListener{
-            val dbPersistencia = DbPersistencia(this)
+            val dbPersistencia = DbPersistenciaTareas(this)
             dbPersistencia.eliminar(tarea)
             Toast.makeText(this, "La tarea ha sido eliminada", Toast.LENGTH_LONG).show()
             finish()
@@ -55,7 +50,7 @@ class DetalleActivity : AppCompatActivity() {
 
         btnEditar.setOnClickListener {
             var intent = Intent(this, AddTareaActivity::class.java)
-            intent.putExtra(DB_TABLE, tarea)
+            intent.putExtra(DB_TABLE_TAREAS, tarea)
             this.startActivity(intent)
             finish()
         }
