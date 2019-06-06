@@ -83,6 +83,7 @@ class GestionCategoriasActivity : AppCompatActivity() {
 
                 override fun onChooseColor(position: Int, color: Int) {
                     gradientDrawable.setColor(color)
+                    categoria.color = color
                     colorPicker.dismissDialog()
                 }
             }).show()
