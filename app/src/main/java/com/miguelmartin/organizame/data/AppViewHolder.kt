@@ -1,4 +1,4 @@
-package com.miguelmartin.organizame
+package com.miguelmartin.organizame.data
 
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.miguelmartin.organizame.R
+import com.miguelmartin.organizame.activities.DetalleActivity
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
 import com.miguelmartin.organizame.constantes.formatoFecha
 import com.miguelmartin.organizame.constantes.formatoHora
-import com.miguelmartin.organizame.entity.Tarea
-import java.text.SimpleDateFormat
+import com.miguelmartin.organizame.model.Tarea
 
 class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     RecyclerView.ViewHolder(inflater.inflate(R.layout.item, parent, false)) {

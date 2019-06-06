@@ -1,8 +1,7 @@
-package com.miguelmartin.organizame
+package com.miguelmartin.organizame.activities
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
@@ -10,16 +9,13 @@ import android.widget.Toast
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
 import com.miguelmartin.organizame.constantes.formatoFecha
 import com.miguelmartin.organizame.constantes.formatoHora
-import com.miguelmartin.organizame.entity.Tarea
+import com.miguelmartin.organizame.model.Tarea
 import kotlinx.android.synthetic.main.activity_add_tarea.*
 import kotlinx.android.synthetic.main.activity_add_tarea.toolbar
 import java.util.*
 import android.view.View
-import android.graphics.drawable.GradientDrawable
+import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
-import petrov.kristiyan.colorpicker.ColorPicker
-
-
 
 
 class AddTareaActivity : AppCompatActivity() {
@@ -107,7 +103,9 @@ class AddTareaActivity : AppCompatActivity() {
         tarea.titulo = etTitulo.text.toString()
         tarea.descripcion = etDescripcion.text.toString()
         var fecha: Date? = null
-        if(!tvFecha.text.equals(getString(R.string.escoge_fecha)) || !tvHora.text.equals(getString(R.string.escoge_hora))){
+        if(!tvFecha.text.equals(getString(R.string.escoge_fecha)) || !tvHora.text.equals(getString(
+                R.string.escoge_hora
+            ))){
             fecha = cal.getTime()
         }
 

@@ -1,9 +1,10 @@
-package com.miguelmartin.organizame
+package com.miguelmartin.organizame.data
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.miguelmartin.organizame.entity.Tarea
+import com.miguelmartin.organizame.data.AppViewHolder
+import com.miguelmartin.organizame.model.Tarea
 
 class AppAdapter(private val list: List<Tarea>)
     : RecyclerView.Adapter<AppViewHolder>() {

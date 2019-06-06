@@ -20,5 +20,5 @@ const val sqlCreateTableTareas= "CREATE TABLE IF NOT EXISTS $DB_TABLE_TAREAS (" 
 const val sqlCreateTableCategorias= "CREATE TABLE IF NOT EXISTS $DB_TABLE_CATEGORIAS (" +
         " $COL_ID INTEGER PRIMARY KEY, " +
         " $COL_TITULO TEXT, " +
-        " $COL_COLOR TEXT " +
+        " $COL_COLOR INTEGER " +
         " );"

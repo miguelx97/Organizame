@@ -1,4 +1,4 @@
-package com.miguelmartin.organizame.entity
+package com.miguelmartin.organizame.model
 
 import java.io.Serializable
 import java.util.*

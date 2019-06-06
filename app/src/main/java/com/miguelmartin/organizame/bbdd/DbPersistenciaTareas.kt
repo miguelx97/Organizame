@@ -3,7 +3,7 @@ package com.miguelmartin.organizame.bbdd
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log
-import com.miguelmartin.organizame.entity.Tarea
+import com.miguelmartin.organizame.model.Tarea
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,7 +59,7 @@ class DbPersistenciaTareas {
     fun eliminar(tarea:Tarea){
         Log.w("eliminar tarea ${tarea.id}:", tarea.toString())
         val selectionArgs= arrayOf(tarea.id.toString())
-        dbManager.eliminar("ID=?", selectionArgs)
+        dbManager.eliminar("$COL_ID=?", selectionArgs)
 
     }
 

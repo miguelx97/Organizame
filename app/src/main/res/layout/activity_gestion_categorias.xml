@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".GestionCategoriasActivity">
+        tools:context=".activities.GestionCategoriasActivity">
 
     <include
             android:id="@+id/toolbar"
@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:id="@+id/editText" android:layout_marginTop="40dp"
+            android:id="@+id/etTitulo" android:layout_marginTop="40dp"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" android:layout_marginEnd="40dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="40dp"
             app:layout_constraintStart_toStartOf="parent" android:autofillHints="" android:hint="@string/nombre"/>
@@ -26,14 +26,14 @@
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:id="@+id/lyColores"
-            android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/editText"
+            android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/etTitulo"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@+id/toolbar"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout3" app:layout_constraintVertical_bias="0.0"
             android:layout_marginStart="40dp" android:gravity="center"
             android:padding="5dp" android:layout_marginTop="40dp">
         <TextView
-                android:text="Organiza tus tareas por colores"
+                android:text="Color de categoría"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/tvColores"
                 android:textColor="@android:color/tertiary_text_light"
@@ -46,18 +46,25 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="395dp"
-            android:layout_height="484dp" android:layout_marginTop="40dp"
-            app:layout_constraintTop_toBottomOf="@+id/lyColores" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="484dp" android:layout_marginTop="60dp"
+            app:layout_constraintTop_toBottomOf="@+id/lyColores"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="40dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="40dp">
 
         <android.support.v7.widget.RecyclerView
                 android:clipToPadding="false"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/rvCategorias"
                 android:clipChildren="true"/>
 
     </LinearLayout>
+    <Button style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAnadir" app:layout_constraintStart_toEndOf="@+id/lyColores"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="40dp"
+            android:layout_marginTop="40dp" app:layout_constraintTop_toBottomOf="@+id/etTitulo"
+            app:layout_constraintHorizontal_bias="1" android:text="@string/anadir"/>
 
 </android.support.constraint.ConstraintLayout>

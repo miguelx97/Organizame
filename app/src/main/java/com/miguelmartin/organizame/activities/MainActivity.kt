@@ -1,4 +1,4 @@
-package com.miguelmartin.organizame
+package com.miguelmartin.organizame.activities
 
 import android.app.AlertDialog
 import android.app.SearchManager
@@ -13,8 +13,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
+import com.miguelmartin.organizame.R
+import com.miguelmartin.organizame.bbdd.DbManager
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
-import com.miguelmartin.organizame.entity.Tarea
+import com.miguelmartin.organizame.data.AppAdapter
+import com.miguelmartin.organizame.model.Tarea
 
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private val mUiHandler = Handler()
     private var listaTareas: List<Tarea>? = null
+    lateinit var dbPersistencia:DbPersistenciaTareas
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             var intent = Intent(this, AddTareaActivity::class.java)
             startActivity(intent)
         }
+
     }
 
     override fun onResume() {
@@ -88,7 +93,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun cargarItems(filtro:String) {
-        var dbPersistencia = DbPersistenciaTareas(this)
+        dbPersistencia = DbPersistenciaTareas(this)
         val tareas = dbPersistencia.getItems(filtro)
         listaTareas = tareas
         rellenarRecyclerCiew(tareas)
@@ -131,14 +136,6 @@ class MainActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
     }
-
-
-
-
-
-
-
-
 
     fun getLists(): ArrayList<Tarea> {
         var lists = ArrayList<Tarea>()

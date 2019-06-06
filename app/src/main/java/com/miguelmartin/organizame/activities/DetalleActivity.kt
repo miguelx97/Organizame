@@ -1,15 +1,16 @@
-package com.miguelmartin.organizame
+package com.miguelmartin.organizame.activities
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.widget.Toast
+import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
 import com.miguelmartin.organizame.constantes.formatoFecha
 import com.miguelmartin.organizame.constantes.formatoHora
-import com.miguelmartin.organizame.entity.Tarea
+import com.miguelmartin.organizame.model.Tarea
 import kotlinx.android.synthetic.main.activity_add_tarea.toolbar
 import kotlinx.android.synthetic.main.activity_add_tarea.tvFecha
 import kotlinx.android.synthetic.main.activity_add_tarea.tvHora

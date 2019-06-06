@@ -10,7 +10,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".MainActivity"
+                android:name=".activities.MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -20,14 +20,14 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".DetalleActivity"
-                android:parentActivityName=".MainActivity"/>
+                android:name=".activities.DetalleActivity"
+                android:parentActivityName=".activities.MainActivity"/>
         <activity
-                android:name=".AddTareaActivity"
-                android:parentActivityName=".MainActivity"/>
+                android:name=".activities.AddTareaActivity"
+                android:parentActivityName=".activities.MainActivity"/>
         <activity
-                android:name=".GestionCategoriasActivity"
-                android:parentActivityName=".MainActivity"/>
+                android:name=".activities.GestionCategoriasActivity"
+                android:parentActivityName=".activities.MainActivity"/>
     </application>
 
 </manifest>
