@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 
 class GestionCategoriasActivity : AppCompatActivity() {
     var categoria = Categoria()
-
+    lateinit var gradientDrawable: GradientDrawable
     lateinit var dbPersistencia:DbPersistenciaCategorias
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,30 +35,38 @@ class GestionCategoriasActivity : AppCompatActivity() {
         }
 
         btnAnadir.setOnClickListener {
-            categoria.titulo = etTitulo.text.toString()
+            ocAnadir()
+        }
 
-            var res:Int
-            var action:String
+    }
 
-            if (true){
+    private fun ocAnadir() {
+        categoria.titulo = etTitulo.text.toString()
+        if (!categoria.titulo.isNullOrEmpty()) {
+            var res: Int
+            var action: String
+
+            if (true) {
                 res = dbPersistencia.insertar(categoria)
                 action = "añadida"
-            } else{
+            } else {
                 res = dbPersistencia.modificar(categoria)
                 action = "modificada"
             }
 
             if (res > 0) {
+                gradientDrawable = viewColor.getBackground().mutate() as GradientDrawable
                 Toast.makeText(this, "la categoría ha sido $action", Toast.LENGTH_LONG).show()
                 etTitulo.setText("")
+                gradientDrawable.setColor(0)
                 cargarItems("%")
 
             } else {
                 Toast.makeText(this, "ERROR", Toast.LENGTH_LONG).show()
             }
-
+        } else {
+            Toast.makeText(this, "Debes añadir un título", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     override fun onResume() {
@@ -68,7 +76,7 @@ class GestionCategoriasActivity : AppCompatActivity() {
 
     private fun conClickColores() {
         val colorPicker = ColorPicker(this)
-        var gradientDrawable: GradientDrawable = viewColor.getBackground().mutate() as GradientDrawable
+        gradientDrawable  = viewColor.getBackground().mutate() as GradientDrawable
 
         val colors: ArrayList<String> = arrayListOf("#FFFFFF","#FBFCFC", "#F2D7D5", "#FADBD8", "#FDEDEC", "#E8DAEF", "#D4E6F1",
             "#D6EAF8", "#D1F2EB", "#D0ECE7", "#D4EFDF", "#D5F5E3", "#FCF3CF", "#FDEBD0", "#FAE5D3", "#F6DDCC")
@@ -77,7 +85,6 @@ class GestionCategoriasActivity : AppCompatActivity() {
             .setColors(colors)
             .setColumns(4)
             .setRoundColorButton(true)
-            .setDefaultColorButton(Color.parseColor("#ffffff"))
             .setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
                 override fun onCancel() {}
 
@@ -91,8 +98,7 @@ class GestionCategoriasActivity : AppCompatActivity() {
 
 
     private fun cargarItems(filtro:String) {
-        val categorias = dbPersistencia.getItems(filtro)
-//        val categorias = getLists()
+        val categorias:ArrayList<Categoria> = dbPersistencia.getItems(filtro) as ArrayList<Categoria>
         rellenarRecyclerCiew(categorias)
     }
 
@@ -104,9 +110,15 @@ class GestionCategoriasActivity : AppCompatActivity() {
         return lists;
     }
 
-    private fun rellenarRecyclerCiew(itemsList:List<Categoria>){
+    private fun rellenarRecyclerCiew(itemsList:ArrayList<Categoria>){
         rvCategorias.layoutManager = LinearLayoutManager(this)
         val adapter = AppAdapterCategorias(itemsList)
         rvCategorias.adapter = adapter
     }
+
+    fun setDatos(categoria: Categoria){
+        etTitulo.setText(categoria.titulo)
+    }
+
+
 }

@@ -53,10 +53,12 @@ class DbPersistenciaCategorias {
         return res
     }
 
-    fun eliminar(categoria:Categoria){
+    fun eliminar(categoria:Categoria):Int{
         Log.w("eliminar categoria ${categoria.id}:", categoria.toString())
         val selectionArgs= arrayOf(categoria.id.toString())
-        dbManager.eliminar("$COL_ID=?", selectionArgs)
+        val res = dbManager.eliminar("$COL_ID=?", selectionArgs)
+
+        return res
 
     }
 

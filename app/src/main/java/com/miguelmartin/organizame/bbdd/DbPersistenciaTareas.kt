@@ -56,11 +56,11 @@ class DbPersistenciaTareas {
         return res
     }
 
-    fun eliminar(tarea:Tarea){
+    fun eliminar(tarea:Tarea):Int{
         Log.w("eliminar tarea ${tarea.id}:", tarea.toString())
         val selectionArgs= arrayOf(tarea.id.toString())
-        dbManager.eliminar("$COL_ID=?", selectionArgs)
-
+        val res = dbManager.eliminar("$COL_ID=?", selectionArgs)
+        return res
     }
 
     fun modificar(tarea:Tarea):Int{

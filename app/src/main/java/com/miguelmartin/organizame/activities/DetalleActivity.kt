@@ -44,8 +44,11 @@ class DetalleActivity : AppCompatActivity() {
 
         btnEliminar.setOnClickListener{
             val dbPersistencia = DbPersistenciaTareas(this)
-            dbPersistencia.eliminar(tarea)
-            Toast.makeText(this, "La tarea ha sido eliminada", Toast.LENGTH_LONG).show()
+            val res = dbPersistencia.eliminar(tarea)
+            if(res > 0)
+                Toast.makeText(this, "La tarea ha sido eliminada", Toast.LENGTH_SHORT).show()
+            else
+                Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show()
             finish()
         }
 
