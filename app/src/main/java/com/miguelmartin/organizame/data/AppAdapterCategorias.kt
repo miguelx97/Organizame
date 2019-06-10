@@ -1,5 +1,6 @@
 package com.miguelmartin.organizame.data
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +11,9 @@ import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
 import com.miguelmartin.organizame.model.Categoria
 import kotlinx.android.synthetic.main.item_categoria.view.*
 
-class AppAdapterCategorias(private val list: ArrayList<Categoria>)
+
+
+class AppAdapterCategorias(private val list: ArrayList<Categoria>, activityContext: Context)
     : RecyclerView.Adapter<AppAdapterCategorias.AppViewHolderCategorias>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolderCategorias {
@@ -24,6 +27,7 @@ class AppAdapterCategorias(private val list: ArrayList<Categoria>)
 
     override fun getItemCount(): Int = list.size
 
+    var context:Context = activityContext
 
     inner class AppViewHolderCategorias(inflater: LayoutInflater, parent: ViewGroup) :
         RecyclerView.ViewHolder(inflater.inflate(R.layout.item_categoria, parent, false)) {
@@ -48,7 +52,7 @@ class AppAdapterCategorias(private val list: ArrayList<Categoria>)
             tvTitulo?.text = categoria.titulo
 
             itemView.ivEliminar.setOnClickListener {ocEliminar(categoria)}
-            itemView.ivEditar.setOnClickListener {}
+            itemView.ivEditar.setOnClickListener {ocEditar(categoria)}
 
         }
 
@@ -68,8 +72,8 @@ class AppAdapterCategorias(private val list: ArrayList<Categoria>)
         }
 
         fun ocEditar(categoria: Categoria){
-            val gestionCategoriasActivity = GestionCategoriasActivity()
-            gestionCategoriasActivity.setDatos(categoria)
+//            etTitulo.setText(categoria.titulo)
+            GestionCategoriasActivity().setDatos(categoria, context)
         }
     }
 

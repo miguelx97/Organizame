@@ -9,4 +9,6 @@
     <string name="escoge_fecha">escoge fecha</string>
     <string name="escoge_hora">escoge hora</string>
     <string name="nombre">Nombre</string>
+    <string name="nuevo">Nuevo</string>
+    <string name="modificar">Modificar</string>
 </resources>

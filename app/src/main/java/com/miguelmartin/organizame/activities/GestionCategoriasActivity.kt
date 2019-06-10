@@ -1,11 +1,16 @@
 package com.miguelmartin.organizame.activities
 
-import android.graphics.Color
+import android.app.Activity
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
@@ -13,10 +18,10 @@ import com.miguelmartin.organizame.data.AppAdapterCategorias
 import com.miguelmartin.organizame.model.Categoria
 import kotlinx.android.synthetic.main.activity_gestion_categorias.*
 import petrov.kristiyan.colorpicker.ColorPicker
-import kotlin.collections.ArrayList
+
+var categoria = Categoria()
 
 class GestionCategoriasActivity : AppCompatActivity() {
-    var categoria = Categoria()
     lateinit var gradientDrawable: GradientDrawable
     lateinit var dbPersistencia:DbPersistenciaCategorias
 
@@ -30,35 +35,32 @@ class GestionCategoriasActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = "Categorías"
 
-        lyColores.setOnClickListener {
-            conClickColores()
-        }
+        lyColores.setOnClickListener { ocColorPicker() }
 
-        btnAnadir.setOnClickListener {
-            ocAnadir()
-        }
+        btnAnadir.setOnClickListener {ocAnadir() }
 
+        btnNuevo.setOnClickListener { ocNuevo() }
     }
 
     private fun ocAnadir() {
         categoria.titulo = etTitulo.text.toString()
+        Log.w("ocAnadir", categoria.toString())
         if (!categoria.titulo.isNullOrEmpty()) {
             var res: Int
             var action: String
 
-            if (true) {
-                res = dbPersistencia.insertar(categoria)
-                action = "añadida"
-            } else {
+            if (categoria.id > 0) {
                 res = dbPersistencia.modificar(categoria)
                 action = "modificada"
+            } else {
+                res = dbPersistencia.insertar(categoria)
+                action = "añadida"
             }
 
             if (res > 0) {
                 gradientDrawable = viewColor.getBackground().mutate() as GradientDrawable
                 Toast.makeText(this, "la categoría ha sido $action", Toast.LENGTH_LONG).show()
-                etTitulo.setText("")
-                gradientDrawable.setColor(0)
+                limpiarCampos()
                 cargarItems("%")
 
             } else {
@@ -69,12 +71,25 @@ class GestionCategoriasActivity : AppCompatActivity() {
         }
     }
 
+    private fun limpiarCampos() {
+        etTitulo.setText("")
+        gradientDrawable = viewColor.getBackground().mutate() as GradientDrawable
+        gradientDrawable.setColor(0)
+        categoria = Categoria()
+        btnAnadir.setText(getResources().getString(R.string.anadir))
+    }
+
+
+    private fun ocNuevo() {
+        limpiarCampos()
+    }
+
     override fun onResume() {
         super.onResume()
         cargarItems("%")
     }
 
-    private fun conClickColores() {
+    private fun ocColorPicker() {
         val colorPicker = ColorPicker(this)
         gradientDrawable  = viewColor.getBackground().mutate() as GradientDrawable
 
@@ -85,12 +100,16 @@ class GestionCategoriasActivity : AppCompatActivity() {
             .setColors(colors)
             .setColumns(4)
             .setRoundColorButton(true)
+            .setDefaultColorButton(categoria.color!!)
             .setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
                 override fun onCancel() {}
 
                 override fun onChooseColor(position: Int, color: Int) {
-                    gradientDrawable.setColor(color)
-                    categoria.color = color
+                    if(!(position != 0 && color == 0)){
+                        gradientDrawable.setColor(color)
+                        categoria.color = color
+                    }
+
                     colorPicker.dismissDialog()
                 }
             }).show()
@@ -112,13 +131,19 @@ class GestionCategoriasActivity : AppCompatActivity() {
 
     private fun rellenarRecyclerCiew(itemsList:ArrayList<Categoria>){
         rvCategorias.layoutManager = LinearLayoutManager(this)
-        val adapter = AppAdapterCategorias(itemsList)
+        val adapter = AppAdapterCategorias(itemsList, this)
         rvCategorias.adapter = adapter
     }
 
-    fun setDatos(categoria: Categoria){
-        etTitulo.setText(categoria.titulo)
+    fun setDatos(categoriaAdap: Categoria, context:Context){
+        var etTitulo: EditText = (context as Activity).findViewById(R.id.etTitulo) as EditText
+        var viewColor: View = (context as Activity).findViewById(R.id.viewColor) as View
+        var btnAnadir: Button = (context as Activity).findViewById(R.id.btnAnadir) as Button
+        gradientDrawable  = viewColor.getBackground().mutate() as GradientDrawable
+
+        categoria = categoriaAdap
+        etTitulo.setText(categoriaAdap.titulo)
+        gradientDrawable.setColor(categoriaAdap.color!!)
+        btnAnadir.setText("Modificar")
     }
-
-
 }
