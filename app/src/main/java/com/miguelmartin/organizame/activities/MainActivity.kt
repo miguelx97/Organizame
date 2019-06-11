@@ -5,18 +5,19 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
 import com.miguelmartin.organizame.R
-import com.miguelmartin.organizame.bbdd.DbManager
+import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
 import com.miguelmartin.organizame.data.AppAdapter
+import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,9 +27,10 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
-    private val mUiHandler = Handler()
     private var listaTareas: List<Tarea>? = null
     lateinit var dbPersistencia:DbPersistenciaTareas
+    lateinit var dbPersistenciaCategorias:DbPersistenciaCategorias
+    var selectedItems:BooleanArray? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.itemCategorias -> { //ir a Categorias
-                    showListAlert()
+                    alertCategorias()
                 }
             }
         }
@@ -105,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
-    private fun filtrar(filtro:String):List<Tarea>{
+        private fun filtrar(filtro:String):List<Tarea>{
         val lisEjObjetosFiltrado = ArrayList<Tarea>()
         for (tarea in listaTareas!!) {
             if (tarea.titulo?.contains(filtro)!!) {
@@ -116,22 +118,38 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun showListAlert(){
-        val listItems = arrayOf("one", "two", "three", "four", "five")
+    fun alertCategorias(){
+
+        dbPersistenciaCategorias = DbPersistenciaCategorias(this)
+
+        val listaCategorias: List<Categoria> = dbPersistenciaCategorias.getItems("%")
+
+        val arrItems = arrayOfNulls<String>(listaCategorias.size)
+        if (selectedItems == null)
+                selectedItems =  BooleanArray(listaCategorias.size){ i ->  false}
+
+        var i = 0
+        listaCategorias.forEach {
+            arrItems[i++] = it.titulo
+        }
 
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Choose items")
 
-        val checkedItems =  booleanArrayOf(true, false, true, false, true) //this will checked the items when user open the dialog
-        builder.setMultiChoiceItems(
-            listItems, checkedItems
-        ) { dialog, which, isChecked ->
-            Toast.makeText( this, "Position: " + which + " Value: " + listItems[which] + " State: " + if (isChecked) "checked" else "unchecked",Toast.LENGTH_LONG).show()
-        }
+        builder.setMultiChoiceItems(arrItems, selectedItems) { dialog, which, isChecked ->  }//onClick al checkear
 
-        builder.setPositiveButton(
-            "Done"
-        ) { dialog, which -> dialog.dismiss() }
+//        builder.setCancelable(true)
+
+        builder.setNegativeButton("Cancelar"){ dialog, which -> dialog.dismiss() }
+
+        builder.setPositiveButton("Aceptar") {dialog, which ->
+            for (i in 0 until arrItems.size) {
+                val checked = selectedItems!![i]
+                if (checked) {
+                    Log.w("Categ", arrItems[i])
+                }
+            }
+        }
 
         val dialog = builder.create()
         dialog.show()
