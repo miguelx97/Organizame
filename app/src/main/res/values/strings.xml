@@ -11,4 +11,8 @@
     <string name="nombre">Nombre</string>
     <string name="nuevo">Nuevo</string>
     <string name="modificar">Modificar</string>
+    <string name="recordatorio">Recordatorio</string>
+    <string name="categorias">Categorías</string>
+    <string name="eliminar_recordatorio">Eliminar recordatorio</string>
+    <string name="importante">Importante</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.miguelmartin.organizame.model
 
+import com.miguelmartin.organizame.activities.NO_IMPORTANTE
 import java.io.Serializable
 import java.util.*
 
@@ -7,13 +8,14 @@ class Tarea(
     var id: Int = 0,
     var titulo: String? = "",
     var descripcion: String? = "",
-    var prioridad: Int? = 1,
-    var fecha: Date? = null
+    var prioridad: Int? = NO_IMPORTANTE,
+    var fecha: Date? = null,
+    var categoria: Categoria = Categoria()
 
 
 ): Serializable {
 
     override fun toString(): String {
-        return "Tarea(id=$id, titulo=$titulo, descripcion=$descripcion, prioridad=$prioridad, fecha=$fecha)"
+        return "Tarea(id=$id, titulo=$titulo, descripcion=$descripcion, prioridad=$prioridad, fecha=$fecha, categoria=$categoria)"
     }
 }

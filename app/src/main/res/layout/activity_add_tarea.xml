@@ -13,12 +13,6 @@
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp" android:id="@+id/linearLayout3">
-    </LinearLayout>
     <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,7 +21,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="110dp"
             app:layout_constraintTop_toTopOf="parent" android:hint="Titulo" android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"/>
+            android:layout_marginEnd="40dp" android:textSize="20sp"/>
     <Button style="@style/Widget.AppCompat.Button.Colored"
             android:text="@string/anadir"
             android:layout_width="wrap_content"
@@ -44,40 +38,55 @@
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="40dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="40dp"
             app:layout_constraintTop_toBottomOf="@+id/etTitulo"
-            android:hint="Descripcion"/>
-    <Switch
-            android:text="Tarea prioritaria  "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/swPrioritario" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.044" android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp" app:layout_constraintTop_toBottomOf="@+id/etDescripcion"
-            android:textColor="@android:color/tertiary_text_light" android:textSize="16dp"/>
+            android:hint="Descripcion" android:textSize="16sp"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginTop="40dp"
+            app:layout_constraintTop_toBottomOf="@+id/etDescripcion" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="40dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="40dp"
+            android:id="@+id/linearLayout2">
+        <Button
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:text="@string/importante"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/btnImportante" android:layout_weight="0.3"
+                android:textSize="16sp"
+                android:textColor="@android:color/tertiary_text_light" android:drawableLeft="@drawable/estrella"/>
+        <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_weight="1"/>
+        <Button
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:text="Categorías"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/btnCategorias" android:layout_weight="0.5"
+                android:textSize="16sp"
+                android:textColor="@android:color/tertiary_text_light" android:drawableLeft="@drawable/carpeta_roja"/>
+    </LinearLayout>
 
 
     <Button
-            android:text="Añadir Fecha y hora"
+            android:text="@string/recordatorio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/btnFechaHora"
             android:background="@drawable/red_btn"
-            android:textColor="@color/colorPrimary" app:layout_constraintTop_toBottomOf="@+id/swPrioritario"
-            android:layout_marginTop="65dp"
-            app:layout_constraintEnd_toEndOf="@+id/linearLayout3" android:layout_marginStart="40dp"
-            app:layout_constraintStart_toStartOf="@+id/linearLayout3" app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginEnd="40dp"/>
+            android:textColor="@color/colorPrimary" app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp" android:layout_marginTop="40dp"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/swPrioritario"
+            android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/btnFechaHora"
             android:gravity="center_horizontal|center_vertical"
             android:paddingTop="20dp"
             android:paddingBottom="20dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="40dp" app:layout_constraintStart_toStartOf="parent"
             android:background="@drawable/red_style_border" android:layout_marginEnd="40dp"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/btnAnadir"
-            android:layout_marginTop="100dp" app:layout_constraintVertical_bias="0.26"
+            android:layout_marginTop="8dp" app:layout_constraintVertical_bias="0.26"
             android:id="@+id/lyFechaHora" android:visibility="invisible">
         <LinearLayout
                 android:orientation="horizontal"

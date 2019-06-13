@@ -44,7 +44,7 @@ class DbManager {
         return id.toInt()
     }
 
-    fun customQuery(projection:Array<String>, selection:String, selectionArgs:Array<String>, sortOrder:String):Cursor{
+    fun getDatos(projection:Array<String>, selection:String, selectionArgs:Array<String>, sortOrder:String):Cursor{
         var qb=SQLiteQueryBuilder()
         qb.tables = currentTable
 
@@ -61,6 +61,15 @@ class DbManager {
     fun modificar(values:ContentValues, selection: String, selectionArgs: Array<String>):Int{
         val count=sqlDB!!.update(currentTable, values, selection, selectionArgs)
         return count
+    }
+
+    fun customQuery(query:String):Cursor{
+        var qb=SQLiteQueryBuilder()
+        qb.tables = currentTable
+
+        val cursor = sqlDB?.rawQuery("select t.$COL_ID, t.$COL_TITULO, t.$COL_DESCRIPCION, t.$COL_FECHA, t.$COL_PRIORIDAD, c.$COL_ID_CATE, c.$COL_TITULO_CATE, c.$COL_COLOR_CATE from $DB_TABLE_TAREAS t left join $DB_TABLE_CATEGORIAS c on t.$COL_FK_ID_CATEGORIA = c.$COL_ID_CATE order by t.$COL_PRIORIDAD, t.$COL_FECHA", null);
+
+        return cursor!!
     }
 
 }

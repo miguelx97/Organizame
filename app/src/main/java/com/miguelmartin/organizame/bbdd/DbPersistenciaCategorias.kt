@@ -18,9 +18,9 @@ class DbPersistenciaCategorias {
 
     fun getItems(filtro:String):List<Categoria> {
         var list = ArrayList<Categoria>()
-        var projection = arrayOf(COL_ID, COL_TITULO, COL_COLOR)
+        var projection = arrayOf(COL_ID_CATE, COL_TITULO_CATE, COL_COLOR_CATE)
         val selectionArgs= arrayOf(filtro)
-        val cursor = dbManager.customQuery(projection, "$COL_TITULO like ? ", selectionArgs, COL_ID)
+        val cursor = dbManager.getDatos(projection, "$COL_TITULO_CATE like ? ", selectionArgs, COL_ID_CATE)
 
         list.clear()
 
@@ -31,9 +31,9 @@ class DbPersistenciaCategorias {
 
                 categoria =
                     Categoria(
-                        cursor.getInt(cursor.getColumnIndex(COL_ID)),
-                        cursor.getString(cursor.getColumnIndex(COL_TITULO)),
-                        cursor.getInt(cursor.getColumnIndex(COL_COLOR))
+                        cursor.getInt(cursor.getColumnIndex(COL_ID_CATE)),
+                        cursor.getString(cursor.getColumnIndex(COL_TITULO_CATE)),
+                        cursor.getInt(cursor.getColumnIndex(COL_COLOR_CATE))
                     )
 
                 list.add(categoria)
@@ -56,7 +56,7 @@ class DbPersistenciaCategorias {
     fun eliminar(categoria:Categoria):Int{
         Log.w("eliminar categoria ${categoria.id}:", categoria.toString())
         val selectionArgs= arrayOf(categoria.id.toString())
-        val res = dbManager.eliminar("$COL_ID=?", selectionArgs)
+        val res = dbManager.eliminar("$COL_ID_CATE=?", selectionArgs)
 
         return res
 
@@ -65,15 +65,15 @@ class DbPersistenciaCategorias {
     fun modificar(categoria:Categoria):Int{
         Log.w("modificar categoria ${categoria.id}:", categoria.toString())
         var selectionArgs= arrayOf(categoria.id.toString())
-        val res = dbManager.modificar(getValues(categoria), "$COL_ID=?", selectionArgs)
+        val res = dbManager.modificar(getValues(categoria), "$COL_ID_CATE=?", selectionArgs)
 
         return res
     }
 
     fun getValues(categoria:Categoria): ContentValues {
         var values = ContentValues()
-        values.put(COL_TITULO, categoria.titulo)
-        values.put(COL_COLOR, categoria.color)
+        values.put(COL_TITULO_CATE, categoria.titulo)
+        values.put(COL_COLOR_CATE, categoria.color)
         return values
     }
 

@@ -96,7 +96,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun cargarItems(filtro:String) {
         dbPersistencia = DbPersistenciaTareas(this)
-        val tareas = dbPersistencia.getItems(filtro)
+       val tareas = dbPersistencia.getTodo()
+//         val tareas = dbPersistencia.getItems(filtro)
         listaTareas = tareas
         rellenarRecyclerCiew(tareas)
     }
@@ -134,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Choose items")
+        builder.setTitle(getString(R.string.categorias))
 
         builder.setMultiChoiceItems(arrItems, selectedItems) { dialog, which, isChecked ->  }//onClick al checkear
 

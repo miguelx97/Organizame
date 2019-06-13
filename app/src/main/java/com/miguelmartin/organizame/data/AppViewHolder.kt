@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.activities.DetalleActivity
+import com.miguelmartin.organizame.activities.IMPORTANTE
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
 import com.miguelmartin.organizame.constantes.formatoFecha
 import com.miguelmartin.organizame.constantes.formatoHora
@@ -51,7 +52,7 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
             lyFechaHora?.setVisibility(View.GONE)
         }
 
-        if(tarea.prioridad == 2){
+        if(tarea.prioridad == IMPORTANTE){
             lyImportancia?.setBackgroundResource(R.color.colorAccent)
         }
     }
