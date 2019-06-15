@@ -83,21 +83,6 @@ class DbPersistenciaTareas {
         return values
     }
 
-    val format = SimpleDateFormat("yyyyMMddkkmmss")
-    fun fechaToString(date: Date?) : String {
-        var fecha:String = ""
-        if (date != null) fecha = format.format(date)
-        return fecha
-    }
-
-    fun stringToFecha(string:String?) : Date? {
-        var fecha: Date? = null
-        if (string != "") fecha = format.parse(string)
-        return fecha
-    }
-
-
-
     fun getTodo():List<Tarea> {
         var list = ArrayList<Tarea>()
         var projection = arrayOf(COL_ID, COL_TITULO, COL_DESCRIPCION, COL_PRIORIDAD, COL_FECHA)
@@ -118,7 +103,7 @@ class DbPersistenciaTareas {
                         cursor.getInt(cursor.getColumnIndex(COL_PRIORIDAD)),
                         stringToFecha(cursor.getString(cursor.getColumnIndex(COL_FECHA))),
                         Categoria(
-                            cursor.getColumnIndex(COL_ID_CATE),
+                            cursor.getInt(cursor.getColumnIndex(COL_ID_CATE)),
                             cursor.getString(cursor.getColumnIndex(COL_TITULO_CATE)),
                             cursor.getInt(cursor.getColumnIndex(COL_COLOR_CATE))
                         )
@@ -132,5 +117,20 @@ class DbPersistenciaTareas {
         }
 
         return list
+    }
+
+
+    val sinFecha = "sin fecha"
+    val format = SimpleDateFormat("yyyyMMddkkmmss")
+    fun fechaToString(date: Date?) : String {
+        var fecha:String = sinFecha
+        if (date != null) fecha = format.format(date)
+        return fecha
+    }
+
+    fun stringToFecha(string:String?) : Date? {
+        var fecha: Date? = null
+        if (string != sinFecha) fecha = format.parse(string)
+        return fecha
     }
 }

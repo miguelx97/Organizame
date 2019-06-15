@@ -3,7 +3,6 @@ package com.miguelmartin.organizame.activities
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
@@ -70,6 +69,12 @@ class AddTareaActivity : AppCompatActivity() {
                 cambiarEstadoItem(R.drawable.estrella, true, btnImportante);
             } else{
                 cambiarEstadoItem(R.drawable.estrella, false, btnImportante);
+            }
+
+            if(tarea.categoria.id != 0){
+                cambiarEstadoItem(R.drawable.carpeta_add_tarea, true, btnCategorias);
+            } else{
+                cambiarEstadoItem(R.drawable.carpeta_add_tarea, false, btnCategorias);
             }
 
             id=tarea.id
@@ -198,11 +203,11 @@ class AddTareaActivity : AppCompatActivity() {
 
             if(tarea.categoria.id != 0){
                 btnCategorias.setText(arrItems[which])
-                cambiarEstadoItem(R.drawable.carpeta_roja, true, btnCategorias);
+                cambiarEstadoItem(R.drawable.carpeta_add_tarea, true, btnCategorias);
 
             } else{
                 btnCategorias.setText(getString(R.string.categorias))
-                cambiarEstadoItem(R.drawable.carpeta_roja, false, btnCategorias);
+                cambiarEstadoItem(R.drawable.carpeta_add_tarea, false, btnCategorias);
             }
 
 
