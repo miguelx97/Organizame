@@ -25,7 +25,7 @@
             <TextView
                     android:text="@string/titulo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/tvTitulo" android:textSize="24sp"
+                    android:layout_height="wrap_content" android:id="@+id/tvTitulo" android:textSize="21sp"
                     android:textColor="@android:color/black"/>
             <TextView
                     android:text="@string/descripcion"

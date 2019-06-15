@@ -21,16 +21,18 @@ import com.miguelmartin.organizame.model.Tarea
 class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     RecyclerView.ViewHolder(inflater.inflate(R.layout.item, parent, false)) {
 
-    private var tvTitulo: TextView? = null
-    private var tvDescripcion: TextView? = null
-    private var tvHora: TextView? = null
-    private var tvFecha: TextView? = null
-    private var lyImportancia: LinearLayout? = null
-    private var lyFechaHora: LinearLayout? = null
-    private var lyBackground: LinearLayout? = null
-    private var gradient:GradientDrawable? = null
-//    lateinit var gradientDrawable: GradientDrawable
-    lateinit var bgShape:GradientDrawable
+    private lateinit var tvTitulo: TextView
+    private lateinit var tvDescripcion: TextView
+    private lateinit var tvHora: TextView
+    private lateinit var tvFecha: TextView
+    private lateinit var lyImportancia: LinearLayout
+    private lateinit var lyFechaHora: LinearLayout
+    private lateinit var lyBackground: LinearLayout
+    private lateinit var gradient:GradientDrawable
+    private lateinit var bgShape:GradientDrawable
+
+    private lateinit var descripcion:String
+    private var maxLengh = 30
 
     fun bind(tarea: Tarea) {
 
@@ -48,8 +50,19 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
             itemView.context.startActivity(intent)
         }
         tvTitulo?.text = tarea.titulo
-        if(!tarea.descripcion.equals(""))tvDescripcion?.text = tarea.descripcion
-        else tvDescripcion?.setVisibility(View.GONE)
+
+        descripcion = tarea.descripcion!!
+        if(descripcion.length > maxLengh){
+            descripcion = descripcion.substring(0,maxLengh-3)+"..."
+        } else{
+
+        }
+        if(!descripcion.equals("")){
+            tvDescripcion?.text = descripcion
+        } else{
+            tvDescripcion?.setVisibility(View.GONE)
+        }
+
         if(tarea.fecha != null) {
             tvHora?.text = formatoHora.format(tarea.fecha)
             tvFecha?.text = formatoFecha.format(tarea.fecha)

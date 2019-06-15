@@ -15,4 +15,5 @@
     <string name="categorias">Categorías</string>
     <string name="eliminar_recordatorio">Eliminar recordatorio</string>
     <string name="importante">Importante</string>
+    <string name="poner_recordatorio">Poner recordatorio</string>
 </resources>

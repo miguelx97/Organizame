@@ -3,12 +3,16 @@ package com.miguelmartin.organizame.activities
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
@@ -20,9 +24,7 @@ import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
 import kotlinx.android.synthetic.main.activity_add_tarea.*
 import java.util.*
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v7.content.res.AppCompatResources
-import android.widget.Button
+
 
 const val IMPORTANTE = 1
 const val NO_IMPORTANTE = 3
@@ -35,6 +37,8 @@ class AddTareaActivity : AppCompatActivity() {
     var fechaVisible = false
     var importante = false
     lateinit var dbPersistenciaCategorias:DbPersistenciaCategorias
+
+    lateinit var gradientDrawable: GradientDrawable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +56,12 @@ class AddTareaActivity : AppCompatActivity() {
 
             if(tarea.fecha != null) {
                 tvFecha.text = formatoFecha.format(tarea.fecha)
+                cambiarEstadoItem(ivCalendario, true)
                 if((tarea.fecha)!!.seconds != 0){
                     tvHora.text = formatoHora.format(tarea.fecha)
+                    cambiarEstadoItem(ivReloj, true)
                 } else{
+                    cambiarEstadoItem(ivReloj, false)
                     tvHora.text = getString(R.string.escoge_hora)
                 }
 
@@ -63,25 +70,33 @@ class AddTareaActivity : AppCompatActivity() {
                 lyFechaHora.setVisibility(View.VISIBLE)
 
                 cal.setTime(tarea.fecha)
+            } else{
+                cambiarEstadoItem(ivCalendario, false)
             }
 
             if(tarea.prioridad == IMPORTANTE){
-                cambiarEstadoItem(R.drawable.estrella, true, btnImportante);
+                cambiarEstadoItem(btnImportante, true)
             } else{
-                cambiarEstadoItem(R.drawable.estrella, false, btnImportante);
+                cambiarEstadoItem(btnImportante, false)
             }
 
             if(tarea.categoria.id != 0){
-                cambiarEstadoItem(R.drawable.carpeta_add_tarea, true, btnCategorias);
+                cambiarEstadoItem(btnCategorias, true)
+                btnCategorias.text = tarea.categoria.titulo
             } else{
-                cambiarEstadoItem(R.drawable.carpeta_add_tarea, false, btnCategorias);
+                cambiarEstadoItem(btnCategorias, false)
             }
 
             id=tarea.id
 
         } else{                                                 //NUEVA
             supportActionBar!!.title = "Nueva Tarea"
+            cambiarEstadoItem(ivCalendario, false)
+            cambiarEstadoItem(ivReloj, false)
+            cambiarEstadoItem(btnImportante, false)
+            cambiarEstadoItem(btnCategorias, false)
         }
+
 
         btnAnadir.setOnClickListener { anadirModificar() }
 
@@ -101,7 +116,9 @@ class AddTareaActivity : AppCompatActivity() {
         if (fechaVisible) {
             fechaVisible = false
             view = View.INVISIBLE
-            btnFechaHora.setText(getString(R.string.recordatorio))
+            btnFechaHora.setText(getString(R.string.poner_recordatorio))
+            cambiarEstadoItem(ivCalendario, false)
+            cambiarEstadoItem(ivReloj, false)
         } else {
             fechaVisible = true
             view = View.VISIBLE
@@ -160,6 +177,7 @@ class AddTareaActivity : AppCompatActivity() {
             cal.set(Calendar.MINUTE, minute)
             cal.set(Calendar.SECOND, 1)
             tvHora.text = formatoHora.format(cal.time)
+            cambiarEstadoItem(ivReloj, true)
         }
 
         TimePickerDialog(this, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
@@ -173,6 +191,7 @@ class AddTareaActivity : AppCompatActivity() {
         val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{view, mYear, mMonth, mDay ->
             cal.set(mYear, mMonth, mDay, 0, 0, 0)
             tvFecha.text = formatoFecha.format(cal.time)
+            cambiarEstadoItem(ivCalendario, true)
         },year,month,day)
 
         datePickerDialog.show()
@@ -203,11 +222,11 @@ class AddTareaActivity : AppCompatActivity() {
 
             if(tarea.categoria.id != 0){
                 btnCategorias.setText(arrItems[which])
-                cambiarEstadoItem(R.drawable.carpeta_add_tarea, true, btnCategorias);
+                cambiarEstadoItem(btnCategorias, true);
 
             } else{
                 btnCategorias.setText(getString(R.string.categorias))
-                cambiarEstadoItem(R.drawable.carpeta_add_tarea, false, btnCategorias);
+                cambiarEstadoItem(btnCategorias, false);
             }
 
 
@@ -225,28 +244,40 @@ class AddTareaActivity : AppCompatActivity() {
 
     }
 
-    fun cambiarEstadoItem(@DrawableRes drawable:Int, activado:Boolean, boton:Button){
+    fun cambiarEstadoItem(boton:Button, activado:Boolean){
+        var color = getColor(activado)
+
+        val compoundDrawables = boton.getCompoundDrawables()
+        val drawableLeft= compoundDrawables[0].mutate();
+        drawableLeft.setColorFilter(PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN))
+
+    }
+
+    fun cambiarEstadoItem(imageView:ImageView, activado:Boolean){
+        var color = getColor(activado)
+
+        val mode = PorterDuff.Mode.SRC_ATOP
+        imageView.setColorFilter(color, mode)
+    }
+
+    private fun getColor(activado: Boolean): Int {
         var color = 0
-        if(activado){
+        if (activado) {
             color = ContextCompat.getColor(this, R.color.colorPrimary)
-        } else{
+        } else {
             color = ContextCompat.getColor(this, android.R.color.darker_gray)
         }
-        
-        val unwrappedDrawable = AppCompatResources.getDrawable(this, drawable)
-        val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
-        DrawableCompat.setTint(wrappedDrawable, color)
-        boton.setCompoundDrawablesWithIntrinsicBounds( drawable, 0, 0, 0);
+        return color
     }
 
 
     private fun ocImportante() {
         if (!importante) {
             importante = true
-            cambiarEstadoItem(R.drawable.estrella, true, btnImportante);
+            cambiarEstadoItem(btnImportante, true);
         } else {
             importante = false
-            cambiarEstadoItem(R.drawable.estrella, false, btnImportante);
+            cambiarEstadoItem(btnImportante, false);
         }
     }
 

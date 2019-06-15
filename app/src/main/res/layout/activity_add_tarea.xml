@@ -67,7 +67,7 @@
 
 
     <Button
-            android:text="@string/recordatorio"
+            android:text="@string/poner_recordatorio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/btnFechaHora"
@@ -75,7 +75,7 @@
             android:textColor="@color/colorPrimary" app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp" android:layout_marginTop="40dp"/>
+            android:layout_marginEnd="40dp" android:layout_marginTop="60dp"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="0dp"
@@ -85,9 +85,9 @@
             android:paddingBottom="20dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="40dp" app:layout_constraintStart_toStartOf="parent"
             android:background="@drawable/red_style_border" android:layout_marginEnd="40dp"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/btnAnadir"
-            android:layout_marginTop="8dp" app:layout_constraintVertical_bias="0.26"
-            android:id="@+id/lyFechaHora" android:visibility="invisible">
+            app:layout_constraintBottom_toTopOf="@+id/btnAnadir"
+            app:layout_constraintVertical_bias="0.0"
+            android:id="@+id/lyFechaHora" android:visibility="invisible" android:layout_marginTop="30dp">
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
