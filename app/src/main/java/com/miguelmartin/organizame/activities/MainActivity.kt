@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         //Toolbar
         setSupportActionBar(toolbar as Toolbar?)
-        supportActionBar!!.title = "Notas"
+        supportActionBar!!.title = getString(R.string.app_name)
 
         //Float button
         fbAdd.setOnClickListener {

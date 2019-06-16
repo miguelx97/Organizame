@@ -86,8 +86,10 @@ class AddTareaActivity : AppCompatActivity() {
             }
 
             if(tarea.prioridad == IMPORTANTE){
+                importante = true
                 cambiarEstadoItem(btnImportante, true)
             } else{
+                importante = false
                 cambiarEstadoItem(btnImportante, false)
             }
 
@@ -136,13 +138,25 @@ class AddTareaActivity : AppCompatActivity() {
     }
 
     private fun ocEliminar() {
-        val dbPersistencia = DbPersistenciaTareas(this)
-        val res = dbPersistencia.eliminar(tarea)
-        if (res > 0)
-            Toast.makeText(this, "La nota ha sido eliminada", Toast.LENGTH_SHORT).show()
-        else
-            Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show()
-        finish()
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.eliminar_nota))
+        builder.setMessage(getString(R.string.seguro_eliminar_nota))
+        builder.setPositiveButton(getString(R.string.si)){dialog, which ->
+            val dbPersistencia = DbPersistenciaTareas(this)
+            val res = dbPersistencia.eliminar(tarea)
+            if (res > 0)
+                Toast.makeText(this, getString(R.string.nota_eliminada), Toast.LENGTH_SHORT).show()
+            else
+                Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show()
+            finish()
+        }
+        builder.setNegativeButton(getString(R.string.no)){dialog,which ->
+            dialog.dismiss()
+        }
+        builder.setNeutralButton("Cancel"){_,_ ->
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     private fun addFechaHora() {
@@ -153,6 +167,10 @@ class AddTareaActivity : AppCompatActivity() {
             btnFechaHora.setText(getString(R.string.poner_recordatorio))
             cambiarEstadoItem(ivCalendario, false)
             cambiarEstadoItem(ivReloj, false)
+
+            tvFecha.text = getString(R.string.escoge_fecha)
+            tvHora.text = getString(R.string.escoge_hora)
+
         } else {
             fechaVisible = true
             view = View.VISIBLE
@@ -160,8 +178,6 @@ class AddTareaActivity : AppCompatActivity() {
         }
         lyFechaHora.visibility = view
         cal = Calendar.getInstance()
-        tvFecha.text = getString(R.string.escoge_fecha)
-        tvHora.text = getString(R.string.escoge_hora)
     }
 
 
@@ -169,13 +185,11 @@ class AddTareaActivity : AppCompatActivity() {
         tarea.titulo = etTitulo.text.toString()
         tarea.descripcion = etDescripcion.text.toString()
         var fecha: Date? = null
-        if(!tvFecha.text.equals(getString(R.string.escoge_fecha)) || !tvHora.text.equals(getString(
-                R.string.escoge_hora
-            ))){
+        if(!tvFecha.text.equals(getString(R.string.escoge_fecha)) || !tvHora.text.equals(getString(R.string.escoge_hora))){
             fecha = cal.getTime()
         }
 
-        if(fecha != null) tarea.fecha = fecha
+        tarea.fecha = fecha
 
 
         if (importante){

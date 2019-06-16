@@ -1,6 +1,8 @@
 package com.miguelmartin.organizame.data
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -35,9 +37,11 @@ class AppAdapterCategorias(private val list: ArrayList<Categoria>, activityConte
         lateinit var dbPersistencia: DbPersistenciaCategorias;
 
         private var tvTitulo: TextView? = null
-        private var lyCategoria: LinearLayout? = null
+        private var lyCategoria: RelativeLayout? = null
         private var ivEditar: ImageView? = null
         private var ivEliminar: ImageView? = null
+        private lateinit var gradient:GradientDrawable
+        private lateinit var bgShape:GradientDrawable
 
         fun bind(categoria: Categoria) {
 
@@ -47,7 +51,13 @@ class AppAdapterCategorias(private val list: ArrayList<Categoria>, activityConte
             ivEliminar = itemView.findViewById(R.id.ivEliminar)
 
 
-            itemView.setBackgroundColor(categoria.color!!)
+//            itemView.setBackgroundColor(categoria.color!!)
+
+
+            if(categoria.color == Color.TRANSPARENT){
+                categoria.color = Color.WHITE
+            }
+            lyCategoria!!.setBackgroundColor(categoria.color!!)
 
             tvTitulo?.text = categoria.titulo
 

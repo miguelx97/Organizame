@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" android:orientation="horizontal"
-              android:background="@drawable/background_layout" android:gravity="end" android:layout_marginTop="4dp"
-              android:layout_marginBottom="4dp" android:id="@+id/lyCategoria">
-    <TextView
-            android:text="TextView"
-            android:layout_width="260dp"
-            android:layout_height="match_parent" android:id="@+id/tvTitulo" android:gravity="center_vertical"
-            android:textSize="18sp" android:layout_marginEnd="10dp"/>
-    <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp" app:srcCompat="@drawable/lapiz" android:id="@+id/ivEditar"
-            android:layout_marginEnd="20dp"/>
-    <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp" app:srcCompat="@drawable/papelera" android:id="@+id/ivEliminar"
-            android:layout_marginEnd="10dp"/>
-</LinearLayout>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content" android:padding="5dp">
+
+    <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
+        <RelativeLayout
+                android:layout_width="match_parent" android:id="@+id/lyCategoria"
+                android:layout_height="match_parent" android:padding="10dp">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/tvTitulo"
+                    android:gravity="center_vertical" android:textSize="16dp"/>
+
+            <ImageView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/papelera" android:id="@+id/ivEliminar"
+                    android:layout_alignParentRight="true"/>
+            <ImageView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/lapiz" android:id="@+id/ivEditar" android:layout_toLeftOf="@id/ivEliminar"
+                    android:layout_marginEnd="15dp"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</android.support.constraint.ConstraintLayout>

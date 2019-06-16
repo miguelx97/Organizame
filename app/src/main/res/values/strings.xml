@@ -16,4 +16,9 @@
     <string name="eliminar_recordatorio">Eliminar recordatorio</string>
     <string name="importante">Importante</string>
     <string name="poner_recordatorio">Poner recordatorio</string>
+    <string name="eliminar_nota">Eliminar nota</string>
+    <string name="seguro_eliminar_nota">¿Seguro que desea eliminar esta nota?</string>
+    <string name="si">Sí</string>
+    <string name="no">No</string>
+    <string name="nota_eliminada">La nota ha sido eliminada</string>
 </resources>

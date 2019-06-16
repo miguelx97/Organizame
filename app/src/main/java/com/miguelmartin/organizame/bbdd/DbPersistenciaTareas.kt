@@ -156,6 +156,7 @@ class DbPersistenciaTareas {
         }
         Log.w("get tarea ${tarea.id}:", tarea.toString())
 
+
         return tarea
     }
 

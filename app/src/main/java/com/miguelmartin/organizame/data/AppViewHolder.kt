@@ -28,8 +28,10 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     private lateinit var lyImportancia: LinearLayout
     private lateinit var lyFechaHora: LinearLayout
     private lateinit var lyBackground: LinearLayout
-    private lateinit var gradient:GradientDrawable
-    private lateinit var bgShape:GradientDrawable
+    private lateinit var tvCategoria:TextView
+    private lateinit var lyCategoria: LinearLayout
+    private lateinit var lyInferior: LinearLayout
+    private lateinit var tvCategoria2:TextView
 
     private lateinit var descripcion:String
     private var maxLengh = 30
@@ -43,6 +45,10 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         lyImportancia = itemView.findViewById(R.id.lyImportancia)
         lyFechaHora = itemView.findViewById(R.id.lyFechaHora)
         lyBackground = itemView.findViewById(R.id.lyBackground)
+        tvCategoria = itemView.findViewById(R.id.tvCategoria)
+        lyCategoria = itemView.findViewById(R.id.lyCategoria)
+        lyInferior = itemView.findViewById(R.id.lyInferior)
+        tvCategoria2 = itemView.findViewById(R.id.tvCategoria2)
 
         itemView.setOnClickListener {
             var intent = Intent(itemView.context, AddTareaActivity::class.java)
@@ -70,30 +76,36 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
                 tvHora?.setVisibility(View.GONE)
             }
         } else{
-            lyFechaHora?.setVisibility(View.GONE)
+            tvHora?.setVisibility(View.GONE)
+            tvFecha?.setVisibility(View.GONE)
         }
 
         if(tarea.prioridad == IMPORTANTE){
             lyImportancia?.setBackgroundResource(R.color.colorAccent)
         }
-//tarea.categoria.color
 
-        gradient = GradientDrawable(
-            GradientDrawable.Orientation.LEFT_RIGHT,
-            intArrayOf(0, 0, 0, tarea.categoria.color!!)
-        )
 
-        if(tarea.categoria.color == Color.TRANSPARENT){
-            tarea.categoria.color = Color.WHITE
+
+        if(tarea.fecha == null){
+            lyCategoria.visibility = View.VISIBLE
+            tvCategoria.visibility = View.GONE
+            tvCategoria2.text = tarea.categoria.titulo
+            tvCategoria2.setBackgroundColor(tarea.categoria.color!!)
+            if(descripcion.isEmpty()){
+                lyInferior.visibility = View.GONE
+            }
+        } else{
+            lyCategoria.visibility = View.GONE
+            lyInferior.visibility = View.VISIBLE
+            tvCategoria.text = tarea.categoria.titulo
+            tvCategoria.setBackgroundColor(tarea.categoria.color!!)
+            if(descripcion.isEmpty() && tarea.categoria.id == 0){
+                lyInferior.visibility = View.GONE
+            }
         }
-        bgShape = lyBackground!!.getBackground() as GradientDrawable
-        bgShape.setColor(tarea.categoria.color!!)
 
-//        bgShape = GradientDrawable(
-//            GradientDrawable.Orientation.LEFT_RIGHT,
-//            intArrayOf(0, 0, 0, tarea.categoria.color!!)
-//        )
-//        lyBackground!!.setBackground(bgShape)
+
+
 
 
     }

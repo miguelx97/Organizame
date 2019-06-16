@@ -109,7 +109,7 @@
                     android:orientation="horizontal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/btnFechaHora"
-                    android:gravity="center_horizontal|center_vertical"
+                    android:gravity="left|center_vertical"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp" app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginStart="40dp" app:layout_constraintStart_toStartOf="parent"
@@ -121,7 +121,7 @@
                         android:orientation="horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/lyFecha"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical" android:layout_marginStart="10dp">
                     <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp" app:srcCompat="@drawable/calendario"
@@ -133,20 +133,16 @@
                     <TextView
                             android:text="@string/escoge_fecha"
                             android:layout_width="wrap_content"
-                            android:layout_height="23dp"
+                            android:layout_height="wrap_content"
                             android:id="@+id/tvFecha" app:layout_constraintStart_toEndOf="@+id/ivCalendario"
                             android:layout_marginStart="5dp" android:gravity="center"
                             app:layout_constraintTop_toBottomOf="@+id/etDescripcion"/>
                 </LinearLayout>
-                <Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp" android:layout_marginStart="20dp"/>
                 <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/lyHora"
-                        android:gravity="center_vertical">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/lyHora"
+                        android:gravity="right|center_vertical" android:layout_marginEnd="13dp">
                     <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp" app:srcCompat="@drawable/reloj"
@@ -158,7 +154,7 @@
                     <TextView
                             android:text="@string/escoge_hora"
                             android:layout_width="wrap_content"
-                            android:layout_height="23dp"
+                            android:layout_height="wrap_content"
                             android:id="@+id/tvHora" app:layout_constraintStart_toEndOf="@+id/ivReloj"
                             android:gravity="center"
                             app:layout_constraintTop_toBottomOf="@+id/etDescripcion" android:layout_marginStart="5dp"/>
