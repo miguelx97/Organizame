@@ -83,10 +83,27 @@ class DbPersistenciaTareas {
         return values
     }
 
-    fun getTodo():List<Tarea> {
+    fun getTaresByCategoria(arrCategorias: Array<String>):List<Tarea> {
         var list = ArrayList<Tarea>()
-        var projection = arrayOf(COL_ID, COL_TITULO, COL_DESCRIPCION, COL_PRIORIDAD, COL_FECHA)
-        val cursor = dbManager.customQuery("")
+        var condiciones = ""
+        if(!arrCategorias.isEmpty()){
+            condiciones = " where 1=2"
+            arrCategorias.forEach {
+                condiciones += " or c.$COL_ID_CATE = ?"
+            }
+        }
+
+
+
+
+        val query = "select t.$COL_ID, t.$COL_TITULO, t.$COL_DESCRIPCION, t.$COL_FECHA, t.$COL_PRIORIDAD, c.$COL_ID_CATE, c.$COL_TITULO_CATE, c.$COL_COLOR_CATE" +
+                " from $DB_TABLE_TAREAS t" +
+                " left join $DB_TABLE_CATEGORIAS c on" +
+                " t.$COL_FK_ID_CATEGORIA = c.$COL_ID_CATE" +
+                condiciones +
+                " order by t.$COL_PRIORIDAD, t.$COL_FECHA"
+
+        val cursor = dbManager.customQuery(query, arrCategorias)
 
         list.clear()
 
@@ -117,6 +134,29 @@ class DbPersistenciaTareas {
         }
 
         return list
+    }
+
+    fun getNextByFecha():Tarea {
+        var projection = arrayOf(COL_ID, COL_TITULO, COL_DESCRIPCION, COL_PRIORIDAD, COL_FECHA)
+        val selectionArgs= arrayOf(fechaToString(Date()))
+        val query = "select $COL_ID, $COL_TITULO, $COL_DESCRIPCION, $COL_PRIORIDAD, $COL_FECHA from $DB_TABLE_TAREAS t where $COL_FECHA > ? order by $COL_FECHA"
+        val cursor = dbManager.customQuery(query, selectionArgs)
+
+        var tarea:Tarea = Tarea()
+
+        if(cursor.moveToFirst()){
+            tarea =
+                Tarea(
+                    cursor.getInt(cursor.getColumnIndex(COL_ID)),
+                    cursor.getString(cursor.getColumnIndex(COL_TITULO)),
+                    cursor.getString(cursor.getColumnIndex(COL_DESCRIPCION)),
+                    cursor.getInt(cursor.getColumnIndex(COL_PRIORIDAD)),
+                    stringToFecha(cursor.getString(cursor.getColumnIndex(COL_FECHA)))
+                )
+        }
+        Log.w("get tarea ${tarea.id}:", tarea.toString())
+
+        return tarea
     }
 
 

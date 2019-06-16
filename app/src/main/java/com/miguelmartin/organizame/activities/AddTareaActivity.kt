@@ -5,7 +5,6 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -15,11 +14,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import com.miguelmartin.organizame.R
+import com.miguelmartin.organizame.Util.SetReminder
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
 import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
-import com.miguelmartin.organizame.constantes.formatoFecha
-import com.miguelmartin.organizame.constantes.formatoHora
+import com.miguelmartin.organizame.Util.formatoFecha
+import com.miguelmartin.organizame.Util.formatoHora
 import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
 import kotlinx.android.synthetic.main.activity_add_tarea.*
@@ -38,21 +38,31 @@ class AddTareaActivity : AppCompatActivity() {
     var importante = false
     lateinit var dbPersistenciaCategorias:DbPersistenciaCategorias
 
-    lateinit var gradientDrawable: GradientDrawable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_tarea)
         setSupportActionBar(toolbar as Toolbar?)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        toolbar.bringToFront();
 
 
         if (intent.getSerializableExtra(DB_TABLE_TAREAS) != null){     //MODIFICAR
             tarea = intent.getSerializableExtra(DB_TABLE_TAREAS) as Tarea
-            supportActionBar!!.title = "Modificar tarea"
-            btnAnadir.setText("Modificar")
+            supportActionBar!!.title = "Modificar nota"
+            btnAnadir.text = "Modificar"
+
             etTitulo.setText(tarea.titulo)
+            etTitulo.visibility = View.INVISIBLE
+            tvTitulo.setText(tarea.titulo)
+
             etDescripcion.setText(tarea.descripcion)
+            etDescripcion.visibility = View.INVISIBLE
+            tvDescripcion.setText(tarea.descripcion)
+            if (tarea.descripcion!!.isEmpty()){
+                tvDescripcion.setText("Añadir descripción")
+            }
+
 
             if(tarea.fecha != null) {
                 tvFecha.text = formatoFecha.format(tarea.fecha)
@@ -72,6 +82,7 @@ class AddTareaActivity : AppCompatActivity() {
                 cal.setTime(tarea.fecha)
             } else{
                 cambiarEstadoItem(ivCalendario, false)
+                cambiarEstadoItem(ivReloj, false)
             }
 
             if(tarea.prioridad == IMPORTANTE){
@@ -87,10 +98,12 @@ class AddTareaActivity : AppCompatActivity() {
                 cambiarEstadoItem(btnCategorias, false)
             }
 
+            btnEliminar.visibility = View.VISIBLE
             id=tarea.id
 
         } else{                                                 //NUEVA
-            supportActionBar!!.title = "Nueva Tarea"
+            supportActionBar!!.title = "Nueva Nota"
+            btnEliminar.visibility = View.INVISIBLE
             cambiarEstadoItem(ivCalendario, false)
             cambiarEstadoItem(ivReloj, false)
             cambiarEstadoItem(btnImportante, false)
@@ -98,17 +111,38 @@ class AddTareaActivity : AppCompatActivity() {
         }
 
 
-        btnAnadir.setOnClickListener { anadirModificar() }
+        btnAnadir.setOnClickListener { ocAnadirModificar() }
 
-        lyFecha.setOnClickListener(){ ivCalendarioOnClick() }
+        lyFecha.setOnClickListener(){ ocFecha() }
 
-        lyHora.setOnClickListener(){ ivRelojOnClick() }
+        lyHora.setOnClickListener(){ ocHora() }
 
         btnFechaHora.setOnClickListener { addFechaHora() }
 
         btnCategorias.setOnClickListener { modalCategorias() }
 
         btnImportante.setOnClickListener { ocImportante() }
+
+        btnEliminar.setOnClickListener{ ocEliminar() }
+
+        tvTitulo.setOnClickListener {
+            tvTitulo.visibility = View.INVISIBLE
+            etTitulo.visibility = View.VISIBLE
+        }
+        tvDescripcion.setOnClickListener {
+            tvDescripcion.visibility = View.INVISIBLE
+            etDescripcion.visibility = View.VISIBLE
+        }
+    }
+
+    private fun ocEliminar() {
+        val dbPersistencia = DbPersistenciaTareas(this)
+        val res = dbPersistencia.eliminar(tarea)
+        if (res > 0)
+            Toast.makeText(this, "La nota ha sido eliminada", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     private fun addFechaHora() {
@@ -124,14 +158,14 @@ class AddTareaActivity : AppCompatActivity() {
             view = View.VISIBLE
             btnFechaHora.setText(getString(R.string.eliminar_recordatorio))
         }
-        lyFechaHora.setVisibility(view)
+        lyFechaHora.visibility = view
         cal = Calendar.getInstance()
         tvFecha.text = getString(R.string.escoge_fecha)
         tvHora.text = getString(R.string.escoge_hora)
     }
 
 
-    private fun anadirModificar() {
+    private fun ocAnadirModificar() {
         tarea.titulo = etTitulo.text.toString()
         tarea.descripcion = etDescripcion.text.toString()
         var fecha: Date? = null
@@ -141,7 +175,8 @@ class AddTareaActivity : AppCompatActivity() {
             fecha = cal.getTime()
         }
 
-        tarea.fecha = fecha
+        if(fecha != null) tarea.fecha = fecha
+
 
         if (importante){
             tarea.prioridad = IMPORTANTE
@@ -163,7 +198,8 @@ class AddTareaActivity : AppCompatActivity() {
         }
 
         if (res > 0) {
-            Toast.makeText(this, "la tarea ha sido $action", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "la nota ha sido $action", Toast.LENGTH_LONG).show()
+            if(fecha != null) SetReminder(this).setTime()
             finish()
 
         } else {
@@ -171,7 +207,7 @@ class AddTareaActivity : AppCompatActivity() {
         }
     }
 
-    private fun ivRelojOnClick() {
+    private fun ocHora() {
         val timeSetListener = TimePickerDialog.OnTimeSetListener{timePicker, hour, minute ->
             cal.set(Calendar.HOUR_OF_DAY, hour)
             cal.set(Calendar.MINUTE, minute)
@@ -183,7 +219,7 @@ class AddTareaActivity : AppCompatActivity() {
         TimePickerDialog(this, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
     }
 
-    private fun ivCalendarioOnClick() {
+    private fun ocFecha() {
         val year = cal.get(Calendar.YEAR)
         val month = cal.get(Calendar.MONTH)
         val day = cal.get(Calendar.DAY_OF_MONTH)
@@ -203,16 +239,20 @@ class AddTareaActivity : AppCompatActivity() {
         dbPersistenciaCategorias = DbPersistenciaCategorias(this)
         val listaCategorias: List<Categoria> = dbPersistenciaCategorias.getItems("%")
         val arrItems = arrayOfNulls<String>(listaCategorias.size + 1)
+        var selectedItem = -1
 
         var i = 0
         arrItems[i++] = "Sin Categoría"
         listaCategorias.forEach {
+            if(it.id == tarea.categoria.id){
+                selectedItem = i
+            }
             arrItems[i++] = it.titulo
         }
 
         builder.setTitle(getString(R.string.categorias))
 
-        builder.setSingleChoiceItems(arrItems, -1) {dialog, which ->
+        builder.setSingleChoiceItems(arrItems, selectedItem) {dialog, which ->
             tarea.categoria!!.id = 0
             listaCategorias.forEach {
                 if(it.titulo.equals(arrItems[which])){

@@ -10,11 +10,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.miguelmartin.organizame.R
-import com.miguelmartin.organizame.activities.DetalleActivity
+import com.miguelmartin.organizame.activities.AddTareaActivity
 import com.miguelmartin.organizame.activities.IMPORTANTE
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
-import com.miguelmartin.organizame.constantes.formatoFecha
-import com.miguelmartin.organizame.constantes.formatoHora
+import com.miguelmartin.organizame.Util.formatoFecha
+import com.miguelmartin.organizame.Util.formatoHora
 import com.miguelmartin.organizame.model.Tarea
 
 
@@ -45,7 +45,7 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         lyBackground = itemView.findViewById(R.id.lyBackground)
 
         itemView.setOnClickListener {
-            var intent = Intent(itemView.context, DetalleActivity::class.java)
+            var intent = Intent(itemView.context, AddTareaActivity::class.java)
             intent.putExtra(DB_TABLE_TAREAS, tarea)
             itemView.context.startActivity(intent)
         }

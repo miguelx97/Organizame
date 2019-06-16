@@ -20,14 +20,21 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.DetalleActivity"
-                android:parentActivityName=".activities.MainActivity"/>
-        <activity
                 android:name=".activities.AddTareaActivity"
                 android:parentActivityName=".activities.MainActivity"/>
         <activity
                 android:name=".activities.GestionCategoriasActivity"
                 android:parentActivityName=".activities.MainActivity"/>
+
+        <receiver android:name=".Util.BroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.miguelmartin.organizame.reminder"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -13,126 +14,179 @@
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-    <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:id="@+id/etTitulo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="110dp"
-            app:layout_constraintTop_toTopOf="parent" android:hint="Titulo" android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp" android:textSize="20sp"/>
-    <Button style="@style/Widget.AppCompat.Button.Colored"
-            android:text="@string/anadir"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnAnadir" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="40dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="1" android:layout_marginBottom="40dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:id="@+id/etDescripcion" android:layout_marginEnd="40dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="40dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="40dp"
-            app:layout_constraintTop_toBottomOf="@+id/etTitulo"
-            android:hint="Descripcion" android:textSize="16sp"/>
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" android:layout_marginTop="40dp"
-            app:layout_constraintTop_toBottomOf="@+id/etDescripcion" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="40dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="40dp"
-            android:id="@+id/linearLayout2">
-        <Button
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:text="@string/importante"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/btnImportante" android:layout_weight="0.3"
-                android:textSize="16sp"
-                android:textColor="@android:color/tertiary_text_light" android:drawableLeft="@drawable/estrella"/>
-        <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:layout_weight="1"/>
-        <Button
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:text="Categorías"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/btnCategorias" android:layout_weight="0.5"
-                android:textSize="16sp"
-                android:textColor="@android:color/tertiary_text_light" android:drawableLeft="@drawable/carpeta_add_tarea"/>
-    </LinearLayout>
+    <ScrollView
+            android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true" tools:layout_editor_absoluteY="-199dp"
+                tools:layout_editor_absoluteX="-115dp">
 
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <Button
-            android:text="@string/poner_recordatorio"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnFechaHora"
-            android:background="@drawable/red_btn"
-            android:textColor="@color/colorPrimary" app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp" android:layout_marginTop="60dp"/>
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/btnFechaHora"
-            android:gravity="center_horizontal|center_vertical"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="40dp" app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/red_style_border" android:layout_marginEnd="40dp"
-            app:layout_constraintBottom_toTopOf="@+id/btnAnadir"
-            app:layout_constraintVertical_bias="0.0"
-            android:id="@+id/lyFechaHora" android:visibility="invisible" android:layout_marginTop="30dp">
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/lyFecha"
-                android:gravity="center_vertical">
-            <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp" app:srcCompat="@drawable/calendario"
-                    android:id="@+id/ivCalendario"
-                    app:layout_constraintTop_toBottomOf="@+id/etDescripcion"
+            <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:id="@+id/etTitulo"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.288" app:layout_constraintStart_toEndOf="@+id/tvHora"/>
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="110dp"
+                    app:layout_constraintTop_toTopOf="parent" android:hint="Titulo" android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp" android:textSize="20sp"/>
             <TextView
-                    android:text="@string/escoge_fecha"
-                    android:layout_width="wrap_content"
-                    android:layout_height="23dp"
-                    android:id="@+id/tvFecha" app:layout_constraintStart_toEndOf="@+id/ivCalendario"
-                    android:layout_marginStart="5dp" android:gravity="center"
-                    app:layout_constraintTop_toBottomOf="@+id/etDescripcion"/>
-        </LinearLayout>
-        <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp" android:layout_marginStart="20dp"/>
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/lyHora"
-                android:gravity="center_vertical">
-            <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp" app:srcCompat="@drawable/reloj"
-                    android:id="@+id/ivReloj"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:id="@+id/tvTitulo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="110dp"
+                    app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp" android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+
+            <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:id="@+id/etDescripcion" android:layout_marginEnd="40dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="40dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="40dp"
+                    app:layout_constraintTop_toBottomOf="@+id/etTitulo"
+                    android:hint="Descripcion" android:textSize="16sp"/>
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:id="@+id/tvDescripcion" android:layout_marginEnd="40dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="40dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="40dp"
+                    app:layout_constraintTop_toBottomOf="@+id/etTitulo" android:textSize="16sp"/>
+
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:layout_marginTop="40dp"
                     app:layout_constraintTop_toBottomOf="@+id/etDescripcion"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.204"/>
-            <TextView
-                    android:text="@string/escoge_hora"
-                    android:layout_width="wrap_content"
-                    android:layout_height="23dp"
-                    android:id="@+id/tvHora" app:layout_constraintStart_toEndOf="@+id/ivReloj"
-                    android:gravity="center"
-                    app:layout_constraintTop_toBottomOf="@+id/etDescripcion" android:layout_marginStart="5dp"/>
-        </LinearLayout>
-    </LinearLayout>
+                    android:layout_marginStart="40dp" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="40dp"
+                    android:id="@+id/linearLayout2">
+                <Button
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/importante"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/btnImportante" android:layout_weight="0.3"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/tertiary_text_light"
+                        android:drawableLeft="@drawable/estrella"/>
+                <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:layout_weight="1"/>
+                <Button
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="Categorías"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/btnCategorias" android:layout_weight="0.5"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/tertiary_text_light"
+                        android:drawableLeft="@drawable/carpeta_add_tarea"/>
+            </LinearLayout>
 
+
+            <Button
+                    android:text="@string/poner_recordatorio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnFechaHora"
+                    android:background="@drawable/red_btn"
+                    android:textColor="@color/colorPrimary" app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp" android:layout_marginTop="60dp"/>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/btnFechaHora"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="40dp" app:layout_constraintStart_toStartOf="parent"
+                    android:background="@drawable/red_style_border" android:layout_marginEnd="40dp"
+                    app:layout_constraintBottom_toTopOf="@+id/btnAnadir"
+                    app:layout_constraintVertical_bias="0.0"
+                    android:id="@+id/lyFechaHora" android:visibility="invisible" android:layout_marginTop="25dp">
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/lyFecha"
+                        android:gravity="center_vertical">
+                    <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp" app:srcCompat="@drawable/calendario"
+                            android:id="@+id/ivCalendario"
+                            app:layout_constraintTop_toBottomOf="@+id/etDescripcion"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.288"
+                            app:layout_constraintStart_toEndOf="@+id/tvHora"/>
+                    <TextView
+                            android:text="@string/escoge_fecha"
+                            android:layout_width="wrap_content"
+                            android:layout_height="23dp"
+                            android:id="@+id/tvFecha" app:layout_constraintStart_toEndOf="@+id/ivCalendario"
+                            android:layout_marginStart="5dp" android:gravity="center"
+                            app:layout_constraintTop_toBottomOf="@+id/etDescripcion"/>
+                </LinearLayout>
+                <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp" android:layout_marginStart="20dp"/>
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/lyHora"
+                        android:gravity="center_vertical">
+                    <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp" app:srcCompat="@drawable/reloj"
+                            android:id="@+id/ivReloj"
+                            app:layout_constraintTop_toBottomOf="@+id/etDescripcion"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.204"/>
+                    <TextView
+                            android:text="@string/escoge_hora"
+                            android:layout_width="wrap_content"
+                            android:layout_height="23dp"
+                            android:id="@+id/tvHora" app:layout_constraintStart_toEndOf="@+id/ivReloj"
+                            android:gravity="center"
+                            app:layout_constraintTop_toBottomOf="@+id/etDescripcion" android:layout_marginStart="5dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button style="@style/Widget.AppCompat.Button.Colored"
+                    android:text="@string/anadir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:id="@+id/btnAnadir" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="40dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintTop_toBottomOf="@+id/btnFechaHora" android:layout_marginTop="130dp"
+                    android:layout_marginBottom="20dp" app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintVertical_bias="0.0"/>
+            <Button style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:text="@string/eliminar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:id="@+id/btnEliminar"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0.973"
+                    app:layout_constraintTop_toBottomOf="@+id/btnFechaHora" android:layout_marginTop="130dp"
+                    app:layout_constraintEnd_toStartOf="@+id/btnAnadir" android:layout_marginBottom="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"/>
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>

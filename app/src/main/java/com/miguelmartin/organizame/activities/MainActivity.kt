@@ -8,17 +8,16 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
-import android.widget.Toast
 import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
 import com.miguelmartin.organizame.data.AppAdapter
 import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
+import com.miguelmartin.organizame.Util.Notifications
 
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -38,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         //Toolbar
         setSupportActionBar(toolbar as Toolbar?)
-        supportActionBar!!.title = "Tareas"
+        supportActionBar!!.title = "Notas"
 
         //Float button
         fbAdd.setOnClickListener {
@@ -51,7 +50,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        cargarItems("%")
+        cargarItems(emptyArray())
+//        Notifications(this).createNotification("hola","hola mundo")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         sv.setSearchableInfo(sm.getSearchableInfo(componentName))
         sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                cargarItems("%"+ query +"%")
                 return false
             }
 
@@ -86,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.itemCategorias -> { //ir a Categorias
-                    alertCategorias()
+                    modalCategorias()
                 }
             }
         }
@@ -94,10 +93,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun cargarItems(filtro:String) {
+    private fun cargarItems(arrCategorias: Array<String>) {
         dbPersistencia = DbPersistenciaTareas(this)
-       val tareas = dbPersistencia.getTodo()
-//         val tareas = dbPersistencia.getItems(filtro)
+        val tareas = dbPersistencia.getTaresByCategoria(arrCategorias)
         listaTareas = tareas
         rellenarRecyclerCiew(tareas)
     }
@@ -111,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         private fun filtrar(filtro:String):List<Tarea>{
         val lisEjObjetosFiltrado = ArrayList<Tarea>()
         for (tarea in listaTareas!!) {
-            if (tarea.titulo?.contains(filtro)!!) {
+            if (tarea.titulo!!.toUpperCase().contains(filtro.toUpperCase())!!) {
                 lisEjObjetosFiltrado.add(tarea)
             }
         }
@@ -119,7 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun alertCategorias(){
+    fun modalCategorias(){
 
         dbPersistenciaCategorias = DbPersistenciaCategorias(this)
 
@@ -139,17 +137,21 @@ class MainActivity : AppCompatActivity() {
 
         builder.setMultiChoiceItems(arrItems, selectedItems) { dialog, which, isChecked ->  }//onClick al checkear
 
-//        builder.setCancelable(true)
-
         builder.setNegativeButton("Cancelar"){ dialog, which -> dialog.dismiss() }
 
         builder.setPositiveButton("Aceptar") {dialog, which ->
-            for (i in 0 until arrItems.size) {
-                val checked = selectedItems!![i]
-                if (checked) {
-                    Log.w("Categ", arrItems[i])
+            var lCategorias = ArrayList<String>()
+            for (i in 0 until listaCategorias.size){
+                if (selectedItems!![i]) {
+                    lCategorias.add(listaCategorias[i].id.toString())
                 }
             }
+
+            val arrCategorias = Array<String>(lCategorias.size){i -> ""}     //arrayOfNulls<String>(lCategorias.size)
+            lCategorias.toArray(arrCategorias)
+
+            cargarItems(arrCategorias)
+
         }
 
         val dialog = builder.create()
