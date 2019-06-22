@@ -27,12 +27,12 @@
             <EditText
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
                     android:id="@+id/etTitulo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="110dp"
                     app:layout_constraintTop_toTopOf="parent" android:hint="Titulo" android:layout_marginStart="40dp"
-                    android:layout_marginEnd="40dp" android:textSize="20sp"/>
+                    android:layout_marginEnd="40dp" android:textSize="20sp"
+                    android:inputType="textCapSentences|textCapWords"/>
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             <EditText
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
+                    android:inputType="textMultiLine|textCapSentences"
                     android:id="@+id/etDescripcion" android:layout_marginEnd="40dp"
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="40dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="40dp"
