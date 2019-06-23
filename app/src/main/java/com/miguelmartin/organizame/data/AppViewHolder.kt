@@ -104,10 +104,6 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
             }
         }
 
-
-
-
-
     }
 
 }

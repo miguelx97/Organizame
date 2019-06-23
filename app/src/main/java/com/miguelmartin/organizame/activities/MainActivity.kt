@@ -1,5 +1,6 @@
 package com.miguelmartin.organizame.activities
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Context
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -15,13 +17,12 @@ import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
 import com.miguelmartin.organizame.data.AppAdapter
+import com.miguelmartin.organizame.data.AppAdapterCategoriasMain
 import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
-import com.miguelmartin.organizame.Util.Notifications
 
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -45,13 +46,12 @@ class MainActivity : AppCompatActivity() {
             var intent = Intent(this, AddTareaActivity::class.java)
             startActivity(intent)
         }
-
     }
 
     override fun onResume() {
         super.onResume()
         cargarItems(emptyArray())
-//        Notifications(this).createNotification("hola","hola mundo")
+        cargarCategorias()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(filtro: String): Boolean {
-                rellenarRecyclerCiew(filtrar(filtro))
+                rellenarRecyclerView(filtrar(filtro))
                 return false
             }
         })
@@ -92,18 +92,32 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-
-    private fun cargarItems(arrCategorias: Array<String>) {
+    fun cargarItems(arrCategorias: Array<String>) {
         dbPersistencia = DbPersistenciaTareas(this)
         val tareas = dbPersistencia.getTaresByCategoria(arrCategorias)
         listaTareas = tareas
-        rellenarRecyclerCiew(tareas)
+        rellenarRecyclerView(tareas)
+    }
+    private fun cargarCategorias() {
+        dbPersistenciaCategorias = DbPersistenciaCategorias(this)
+        val categorias = dbPersistenciaCategorias.getItems("%")
+        rellenarRecyclerViewCategorias(categorias)
     }
 
-    private fun rellenarRecyclerCiew(itemsList:List<Tarea>){
-        recyclerView.layoutManager = LinearLayoutManager(this)  //www.youtube.com/watch?v=NQWVpm5vdA8
+
+    fun rellenarRecyclerView(itemsList:List<Tarea>){
+        rvTareas.layoutManager = LinearLayoutManager(this)  //www.youtube.com/watch?v=NQWVpm5vdA8
         val adapter = AppAdapter(itemsList)
-        recyclerView.adapter = adapter
+        rvTareas.adapter = adapter
+    }
+
+
+
+    private fun rellenarRecyclerViewCategorias(itemsList:List<Categoria>){
+        rvCategorias.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        val adapter = AppAdapterCategoriasMain(itemsList)
+        rvCategorias.adapter = adapter
     }
 
         private fun filtrar(filtro:String):List<Tarea>{
@@ -147,7 +161,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            val arrCategorias = Array<String>(lCategorias.size){i -> ""}     //arrayOfNulls<String>(lCategorias.size)
+            val arrCategorias = Array<String>(lCategorias.size){i -> ""}
             lCategorias.toArray(arrCategorias)
 
             cargarItems(arrCategorias)

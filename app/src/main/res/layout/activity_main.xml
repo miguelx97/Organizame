@@ -11,14 +11,26 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar" android:layout_height="?attr/actionBarSize" android:layout_width="match_parent"/>
 
-    <android.support.v7.widget.RecyclerView
-            android:clipToPadding="false"
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/recyclerView"
-            android:clipChildren="true" android:layout_marginTop="?attr/actionBarSize"/>
+            android:layout_marginTop="?attr/actionBarSize">
 
+        <android.support.v7.widget.RecyclerView
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/rvCategorias"
+                android:layout_marginTop="10dp" android:layout_marginRight="10dp" android:layout_marginLeft="10dp"
+                android:layout_marginBottom="5dp"/>
 
+        <android.support.v7.widget.RecyclerView
+                android:clipToPadding="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/rvTareas"
+                android:clipChildren="true"/>
+    </LinearLayout>
 
 
     <android.support.design.widget.FloatingActionButton

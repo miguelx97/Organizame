@@ -82,7 +82,6 @@ class AppAdapterCategorias(private val list: ArrayList<Categoria>, activityConte
         }
 
         fun ocEditar(categoria: Categoria){
-//            etTitulo.setText(categoria.titulo)
             GestionCategoriasActivity().setDatos(categoria, context)
         }
     }

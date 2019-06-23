@@ -24,6 +24,7 @@
                 android:parentActivityName=".activities.MainActivity"/>
         <activity
                 android:name=".activities.GestionCategoriasActivity"
+                android:windowSoftInputMode="stateHidden"
                 android:parentActivityName=".activities.MainActivity"/>
 
         <receiver android:name=".Util.BroadcastReceiver">
