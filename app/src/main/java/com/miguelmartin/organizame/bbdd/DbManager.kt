@@ -6,12 +6,13 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteQueryBuilder
+import com.miguelmartin.organizame.Util.ESTADO_INICIAL
 
 
 class DbManager {
 
     val dbName= "Organizame"
-    val dbVersion=1
+    val dbVersion=2
     var currentTable:String? = null
 
     var sqlDB:SQLiteDatabase?=null
@@ -29,14 +30,19 @@ class DbManager {
         }
 
         override fun onCreate(db: SQLiteDatabase?) {
-            db!!.execSQL(sqlCreateTableTareas)
-            db!!.execSQL(sqlCreateTableCategorias)
+            db?.execSQL(sqlCreateTableTareas)
+            db?.execSQL(sqlCreateTableCategorias)
         }
 
         override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-            db!!.execSQL("Drop table IF EXISTS " + DB_TABLE_TAREAS)
-            db!!.execSQL("Drop table IF EXISTS " + DB_TABLE_CATEGORIAS)
+
+            // If you need to add a new column
+            if (newVersion > oldVersion) {
+                db?.execSQL("ALTER TABLE $DB_TABLE_TAREAS ADD COLUMN $COL_ESTADO INTEGER DEFAULT $ESTADO_INICIAL");
+            }
         }
+
+
     }
 
     fun insertar(values:ContentValues):Int{

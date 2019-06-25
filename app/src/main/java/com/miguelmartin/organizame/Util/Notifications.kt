@@ -15,7 +15,7 @@ class Notifications(private val mContext: Context) {
     private var mNotificationManager: NotificationManager? = null
     private var mBuilder: NotificationCompat.Builder? = null
 
-    fun createNotification(title: String, message: String) {
+    fun createNotification(title: String?, message: String?) {
         /**Creates an explicit intent for an Activity in your app */
         val resultIntent = Intent(mContext, MainActivity::class.java)
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -26,7 +26,7 @@ class Notifications(private val mContext: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        mBuilder = NotificationCompat.Builder(mContext)
+        mBuilder = NotificationCompat.Builder(mContext, NOTIFICATION_CHANNEL_ID)
         mBuilder!!.setSmallIcon(R.drawable.exclamacion)
         mBuilder!!.setContentTitle(title)
             .setContentText(message)

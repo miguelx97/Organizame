@@ -34,9 +34,8 @@ class AppAdapterCategoriasMain(private val list: List<Categoria>)
         RecyclerView.ViewHolder(inflater.inflate(R.layout.item_categoria_main, parent, false)) {
 
         private var tvCategoria: TextView? = null
-        private val dbPersistencia:DbPersistenciaTareas = DbPersistenciaTareas(itemView.context)
-        lateinit var tareas:List<Tarea>
-        val rvTareas: RecyclerView = (itemView.context as Activity).findViewById(R.id.rvTareas) as RecyclerView
+
+        val mainActivity = MainActivity()
 
         fun bind(categoria: Categoria) {
 
@@ -47,16 +46,9 @@ class AppAdapterCategoriasMain(private val list: List<Categoria>)
             tvCategoria?.setBackgroundColor(categoria.color!!)
 
             itemView.setOnClickListener {
-                rellenarTareasByCategorias(arrayOf(categoria.id.toString()), itemView.context)
+                mainActivity.cargarItems(arrayOf(categoria.id.toString()))
             }
 
-        }
-
-        fun rellenarTareasByCategorias(arrCategorias: Array<String>, context: Context){
-            tareas = dbPersistencia.getTaresByCategoria(arrCategorias)
-            rvTareas.layoutManager = LinearLayoutManager(context)
-            val adapter = AppAdapter(tareas)
-            rvTareas.adapter = adapter
         }
 
     }

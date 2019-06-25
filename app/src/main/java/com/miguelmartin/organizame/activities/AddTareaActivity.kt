@@ -20,6 +20,7 @@ import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
 import com.miguelmartin.organizame.Util.formatoFecha
 import com.miguelmartin.organizame.Util.formatoHora
+import com.miguelmartin.organizame.Util.formatoSegundos
 import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
 import kotlinx.android.synthetic.main.activity_add_tarea.*
@@ -67,7 +68,7 @@ class AddTareaActivity : AppCompatActivity() {
             if(tarea.fecha != null) {
                 tvFecha.text = formatoFecha.format(tarea.fecha)
                 cambiarEstadoItem(ivCalendario, true)
-                if((tarea.fecha)!!.seconds != 0){
+                if(formatoSegundos.format((tarea.fecha)!!).toInt() != 0){
                     tvHora.text = formatoHora.format(tarea.fecha)
                     cambiarEstadoItem(ivReloj, true)
                 } else{
@@ -141,7 +142,7 @@ class AddTareaActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.eliminar_nota))
         builder.setMessage(getString(R.string.seguro_eliminar_nota))
-        builder.setPositiveButton(getString(R.string.si)){dialog, which ->
+        builder.setPositiveButton(getString(R.string.si)){_, _ ->
             val dbPersistencia = DbPersistenciaTareas(this)
             val res = dbPersistencia.eliminar(tarea)
             if (res > 0)
@@ -150,7 +151,7 @@ class AddTareaActivity : AppCompatActivity() {
                 Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show()
             finish()
         }
-        builder.setNegativeButton(getString(R.string.no)){dialog,which ->
+        builder.setNegativeButton(getString(R.string.no)){dialog,_ ->
             dialog.dismiss()
         }
         builder.setNeutralButton("Cancel"){_,_ ->
@@ -222,7 +223,7 @@ class AddTareaActivity : AppCompatActivity() {
     }
 
     private fun ocHora() {
-        val timeSetListener = TimePickerDialog.OnTimeSetListener{timePicker, hour, minute ->
+        val timeSetListener = TimePickerDialog.OnTimeSetListener{_, hour, minute ->
             cal.set(Calendar.HOUR_OF_DAY, hour)
             cal.set(Calendar.MINUTE, minute)
             cal.set(Calendar.SECOND, 1)
@@ -238,7 +239,7 @@ class AddTareaActivity : AppCompatActivity() {
         val month = cal.get(Calendar.MONTH)
         val day = cal.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{view, mYear, mMonth, mDay ->
+        val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{_, mYear, mMonth, mDay ->
             cal.set(mYear, mMonth, mDay, 0, 0, 0)
             tvFecha.text = formatoFecha.format(cal.time)
             cambiarEstadoItem(ivCalendario, true)
@@ -267,10 +268,10 @@ class AddTareaActivity : AppCompatActivity() {
         builder.setTitle(getString(R.string.categorias))
 
         builder.setSingleChoiceItems(arrItems, selectedItem) {dialog, which ->
-            tarea.categoria!!.id = 0
+            tarea.categoria.id = 0
             listaCategorias.forEach {
                 if(it.titulo.equals(arrItems[which])){
-                    tarea.categoria!!.id = it.id
+                    tarea.categoria.id = it.id
                 }
             }
 
@@ -288,7 +289,7 @@ class AddTareaActivity : AppCompatActivity() {
 
         }
 
-        builder.setNeutralButton("Cancelar") { dialog, which ->
+        builder.setNeutralButton("Cancelar") { dialog,_ ->
             // Do something when click the neutral button
             dialog.cancel()
         }
@@ -315,7 +316,7 @@ class AddTareaActivity : AppCompatActivity() {
     }
 
     private fun getColor(activado: Boolean): Int {
-        var color = 0
+        var color:Int
         if (activado) {
             color = ContextCompat.getColor(this, R.color.colorPrimary)
         } else {

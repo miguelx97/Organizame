@@ -1,89 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" android:orientation="vertical"
-                android:background="@color/grisClaro">
 
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:id="@+id/lyBackground"
+        android:background="@drawable/background_layout" android:elevation="2dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" android:gravity="right|center_vertical">
     <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:layout_width="4dp"
+            android:layout_height="match_parent" android:id="@+id/lyImportancia"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" android:layout_marginRight="3dp"/>
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/lyBackground"
-            android:background="@drawable/background_layout" android:elevation="2dp"
-            android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" android:gravity="right|center_vertical">
+            android:layout_height="wrap_content">
         <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="4dp"
-                android:layout_height="match_parent" android:id="@+id/lyImportancia"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp" android:layout_marginRight="3dp"/>
-        <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent" android:gravity="clip_vertical|center_vertical">
             <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:gravity="clip_vertical|center_vertical">
-                <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="3pt">
-                    <TextView
-                            android:text="@string/titulo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/tvTitulo" android:textSize="22dp"
-                            android:textColor="#636363" android:maxWidth="240dp" android:textStyle="normal"/>
-                </LinearLayout>
-                <LinearLayout
-                        android:orientation="vertical"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3pt">
+                <TextView
+                        android:text="@string/titulo"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:gravity="right|center_vertical"
-                        android:id="@+id/lyFechaHora">
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/tvFecha"
-                            android:gravity="right|center_vertical" android:text="dom. 00 ene."/>
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/tvHora"
-                            android:gravity="right|center_vertical" android:text="00:00"/>
-                    <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:gravity="right|center_vertical"
-                            android:id="@+id/lyCategoria"
-                            android:visibility="visible">
-                        <TextView
-                                android:text="categoria"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" android:id="@+id/tvCategoria2"
-                                android:padding="5dp"/>
-                    </LinearLayout>
-                </LinearLayout>
+                        android:layout_height="wrap_content" android:id="@+id/tvTitulo" android:textSize="22dp"
+                        android:textColor="#636363" android:maxWidth="240dp" android:textStyle="normal"/>
             </LinearLayout>
             <LinearLayout
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:gravity="right|center_vertical"
-                    android:layout_gravity="right" android:id="@+id/lyInferior">
+                    android:id="@+id/lyFechaHora">
                 <TextView
-                        android:text="@string/descripcion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent" android:id="@+id/tvDescripcion"
-                        android:paddingLeft="10dp"
-                        android:maxWidth="240dp" android:gravity="left|center_vertical"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/tvFecha"
+                        android:gravity="right|center_vertical" android:text="dom. 00 ene."/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/tvHora"
+                        android:gravity="right|center_vertical" android:text="00:00"/>
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:gravity="right">
+                        android:layout_height="wrap_content" android:gravity="right|center_vertical"
+                        android:id="@+id/lyCategoria"
+                        android:visibility="visible">
                     <TextView
                             android:text="categoria"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/tvCategoria" android:padding="5dp"/>
+                            android:layout_height="wrap_content" android:id="@+id/tvCategoria2"
+                            android:padding="5dp"/>
                 </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:gravity="right|center_vertical"
+                android:layout_gravity="right" android:id="@+id/lyInferior">
+            <TextView
+                    android:text="@string/descripcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" android:id="@+id/tvDescripcion"
+                    android:paddingLeft="10dp"
+                    android:maxWidth="240dp" android:gravity="left|center_vertical"/>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:gravity="right">
+                <TextView
+                        android:text="categoria"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/tvCategoria" android:padding="5dp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

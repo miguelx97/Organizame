@@ -137,8 +137,8 @@ class GestionCategoriasActivity : AppCompatActivity() {
 
     fun setDatos(categoriaAdap: Categoria, context:Context){
         var etTitulo: EditText = (context as Activity).findViewById(R.id.etTitulo) as EditText
-        var viewColor: View = (context as Activity).findViewById(R.id.viewColor) as View
-        var btnAnadir: Button = (context as Activity).findViewById(R.id.btnAnadir) as Button
+        var viewColor: View = context.findViewById(R.id.viewColor) as View
+        var btnAnadir: Button = context.findViewById(R.id.btnAnadir) as Button
         gradientDrawable  = viewColor.getBackground().mutate() as GradientDrawable
 
         categoria = categoriaAdap

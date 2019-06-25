@@ -3,10 +3,16 @@ package com.miguelmartin.organizame.bbdd
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log
+import com.miguelmartin.organizame.Util.ESTADO_ARCHIVADO
+import com.miguelmartin.organizame.Util.ESTADO_ELIMINADO
+import com.miguelmartin.organizame.Util.ESTADO_INICIAL
 import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+
+
 
 class DbPersistenciaTareas {
 
@@ -58,6 +64,29 @@ class DbPersistenciaTareas {
     }
 
     fun eliminar(tarea:Tarea):Int{
+        return cambiarEstado(tarea.id, ESTADO_ELIMINADO)
+    }
+
+    fun archivar(tarea:Tarea):Int{
+        return cambiarEstado(tarea.id, ESTADO_ARCHIVADO)
+    }
+
+    fun estadoInicial(tarea:Tarea):Int{
+        return cambiarEstado(tarea.id, ESTADO_INICIAL)
+    }
+
+    fun cambiarEstado(id:Int, estado:Int):Int{
+        Log.w("Estado de $id a", estado.toString())
+        var selectionArgs= arrayOf(id.toString())
+        val cv = ContentValues()
+        cv.put(COL_ESTADO, estado)
+
+        val res = dbManager.modificar(cv, "$COL_ID=?", selectionArgs)
+
+        return res
+    }
+
+    fun eliminarDefinitivo(tarea:Tarea):Int{
         Log.w("eliminar tarea ${tarea.id}:", tarea.toString())
         val selectionArgs= arrayOf(tarea.id.toString())
         val res = dbManager.eliminar("$COL_ID=?", selectionArgs)
@@ -77,13 +106,13 @@ class DbPersistenciaTareas {
         values.put(COL_TITULO, tarea.titulo)
         values.put(COL_DESCRIPCION, tarea.descripcion)
         values.put(COL_PRIORIDAD, tarea.prioridad)
-
         values.put(COL_FECHA, fechaToString(tarea.fecha))
         values.put(COL_FK_ID_CATEGORIA, tarea.categoria.id)
+
         return values
     }
 
-    fun getTaresByCategoria(arrCategorias: Array<String>):List<Tarea> {
+    fun getTaresByCategoria(arrCategorias: Array<String>):ArrayList<Tarea> {
         var list = ArrayList<Tarea>()
         var condiciones = ""
         if(!arrCategorias.isEmpty()){
@@ -93,15 +122,12 @@ class DbPersistenciaTareas {
             }
         }
 
-
-
-
-        val query = "select t.$COL_ID, t.$COL_TITULO, t.$COL_DESCRIPCION, t.$COL_FECHA, t.$COL_PRIORIDAD, c.$COL_ID_CATE, c.$COL_TITULO_CATE, c.$COL_COLOR_CATE" +
+        val query = "select t.$COL_ID, t.$COL_TITULO, t.$COL_DESCRIPCION, t.$COL_FECHA, t.$COL_PRIORIDAD, t.$COL_ESTADO, c.$COL_ID_CATE, c.$COL_TITULO_CATE, c.$COL_COLOR_CATE" +
                 " from $DB_TABLE_TAREAS t" +
                 " left join $DB_TABLE_CATEGORIAS c on" +
                 " t.$COL_FK_ID_CATEGORIA = c.$COL_ID_CATE" +
                 condiciones +
-                " order by t.$COL_PRIORIDAD, t.$COL_FECHA"
+                " order by t.$COL_PRIORIDAD, t.$COL_FECHA, t.$COL_TITULO"
 
         val cursor = dbManager.customQuery(query, arrCategorias)
 
@@ -123,7 +149,8 @@ class DbPersistenciaTareas {
                             cursor.getInt(cursor.getColumnIndex(COL_ID_CATE)),
                             cursor.getString(cursor.getColumnIndex(COL_TITULO_CATE)),
                             cursor.getInt(cursor.getColumnIndex(COL_COLOR_CATE))
-                        )
+                        ),
+                        cursor.getInt(cursor.getColumnIndex(COL_ESTADO))
                     )
 
                 list.add(tarea)
@@ -137,9 +164,8 @@ class DbPersistenciaTareas {
     }
 
     fun getNextByFecha():Tarea {
-        var projection = arrayOf(COL_ID, COL_TITULO, COL_DESCRIPCION, COL_PRIORIDAD, COL_FECHA)
         val selectionArgs= arrayOf(fechaToString(Date()))
-        val query = "select $COL_ID, $COL_TITULO, $COL_DESCRIPCION, $COL_PRIORIDAD, $COL_FECHA from $DB_TABLE_TAREAS t where $COL_FECHA > ? order by $COL_FECHA"
+        val query = QUERY_GET_NEXT_TAREAS_BY_FECHA
         val cursor = dbManager.customQuery(query, selectionArgs)
 
         var tarea:Tarea = Tarea()

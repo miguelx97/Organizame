@@ -15,7 +15,9 @@ import com.miguelmartin.organizame.activities.IMPORTANTE
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
 import com.miguelmartin.organizame.Util.formatoFecha
 import com.miguelmartin.organizame.Util.formatoHora
+import com.miguelmartin.organizame.Util.formatoSegundos
 import com.miguelmartin.organizame.model.Tarea
+import java.text.SimpleDateFormat
 
 
 class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
@@ -36,6 +38,7 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     private lateinit var descripcion:String
     private var maxLengh = 30
 
+
     fun bind(tarea: Tarea) {
 
         tvTitulo = itemView.findViewById(R.id.tvTitulo)
@@ -50,12 +53,13 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         lyInferior = itemView.findViewById(R.id.lyInferior)
         tvCategoria2 = itemView.findViewById(R.id.tvCategoria2)
 
+
         itemView.setOnClickListener {
             var intent = Intent(itemView.context, AddTareaActivity::class.java)
             intent.putExtra(DB_TABLE_TAREAS, tarea)
             itemView.context.startActivity(intent)
         }
-        tvTitulo?.text = tarea.titulo
+        tvTitulo.text = tarea.titulo
 
         descripcion = tarea.descripcion!!
         if(descripcion.length > maxLengh){
@@ -63,25 +67,28 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         } else{
 
         }
+        descripcion = tarea.estado.toString()   //TODO: QUITAR
         if(!descripcion.equals("")){
-            tvDescripcion?.text = descripcion
+            tvDescripcion.text = descripcion
         } else{
-            tvDescripcion?.setVisibility(View.GONE)
+            tvDescripcion.setVisibility(View.GONE)
         }
 
+
+
         if(tarea.fecha != null) {
-            tvHora?.text = formatoHora.format(tarea.fecha)
-            tvFecha?.text = formatoFecha.format(tarea.fecha)
-            if((tarea.fecha)!!.seconds == 0){
-                tvHora?.setVisibility(View.GONE)
+            tvHora.text = formatoHora.format(tarea.fecha)
+            tvFecha.text = formatoFecha.format(tarea.fecha)
+            if(formatoSegundos.format((tarea.fecha)!!).toInt() == 0){
+                tvHora.setVisibility(View.GONE)
             }
         } else{
-            tvHora?.setVisibility(View.GONE)
-            tvFecha?.setVisibility(View.GONE)
+            tvHora.setVisibility(View.GONE)
+            tvFecha.setVisibility(View.GONE)
         }
 
         if(tarea.prioridad == IMPORTANTE){
-            lyImportancia?.setBackgroundResource(R.color.colorAccent)
+            lyImportancia.setBackgroundResource(R.color.colorAccent)
         }
 
 

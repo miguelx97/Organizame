@@ -9,7 +9,7 @@ import com.miguelmartin.organizame.model.Tarea
 
 
 class BroadcastReceiver: BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
+    override fun onReceive(context: Context, intent: Intent?) {
 
         if (intent!!.action.equals(SERVICE_REMINDER)){
             val b = intent.extras
@@ -17,10 +17,10 @@ class BroadcastReceiver: BroadcastReceiver() {
             val mensaje = b.getString(NOTIFICACION_MENSAJE)
 //            Toast.makeText(context,b.getString("message"),Toast.LENGTH_LONG).show()
 //            Toast.makeText(context,"funciona",Toast.LENGTH_LONG).show()
-            Notifications(context!!).createNotification(titulo!!,mensaje)
+            Notifications(context).createNotification(titulo,mensaje)
         }
 
-        SetReminder(context!!).setTime()
+        SetReminder(context).setTime()
     }
 
 }
