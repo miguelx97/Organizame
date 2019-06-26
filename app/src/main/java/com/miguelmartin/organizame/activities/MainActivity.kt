@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var listaTareasCompleta: ArrayList<Tarea>
-        var listaTareas = ArrayList<Tarea>()
+        lateinit var listaTareas: ArrayList<Tarea>
         lateinit var context: Context
         lateinit var adapter:AppAdapter
     }
@@ -65,6 +65,11 @@ class MainActivity : AppCompatActivity() {
             var intent = Intent(this, AddTareaActivity::class.java)
             startActivity(intent)
         }
+        fbCateg.setOnClickListener {
+            //ir a AddTareaActivity
+            var intent = Intent(this, GestionCategoriasActivity::class.java)
+            startActivity(intent)
+        }
 
         iconoSwipe = ContextCompat.getDrawable(context, R.drawable.archivar)!!
         fondoSwipe =   ColorDrawable(ContextCompat.getColor(context, R.color.colorArchivar))
@@ -73,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        cargarItems(emptyArray())
+        cargarItems("", true)
         cargarCategorias()
     }
 
@@ -103,23 +108,26 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item != null) {
             when(item.itemId){
-                R.id.itemNuevaCategoria -> { //ir a addCategorias
-                    var intent = Intent(this, GestionCategoriasActivity::class.java)
-                    startActivity(intent)
-                }
-
-                R.id.itemCategorias -> { //ir a Categorias
-                    modalCategorias()
-                }
+//                R.id.itemNuevaCategoria -> { //ir a addCategorias
+//                    var intent = Intent(this, GestionCategoriasActivity::class.java)
+//                    startActivity(intent)
+//                }
+//
+//                R.id.itemCategorias -> { //ir a Categorias
+//                    modalCategorias()
+//                }
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    fun cargarItems(arrCategorias: Array<String>) {
+    fun cargarItems(categoria: String, verTodo:Boolean) {
         dbPersistencia = DbPersistenciaTareas(context)
-        listaTareasCompleta = dbPersistencia.getTaresByCategoria(arrCategorias)
-        listaTareas = listaTareasCompleta as ArrayList<Tarea>
+        listaTareasCompleta = dbPersistencia.getTaresByCategoria(categoria, verTodo)
+        listaTareas = ArrayList()
+        listaTareasCompleta.forEach {
+            listaTareas.add(it)
+        }
         rellenarRecyclerView()
     }
 
@@ -152,7 +160,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     fun modalCategorias(){
 
@@ -187,7 +194,7 @@ class MainActivity : AppCompatActivity() {
             val arrCategorias = Array<String>(lCategorias.size){""}
             lCategorias.toArray(arrCategorias)
 
-            cargarItems(arrCategorias)
+            cargarItems("",false)
 
         }
 
@@ -208,7 +215,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if(direction == ItemTouchHelper.RIGHT){
-                    eliminar(listaTareas.get(viewHolder.adapterPosition), viewHolder)
+                    eliminar(listaTareas.get(viewHolder.adapterPosition))
                 }
 
 
@@ -217,19 +224,19 @@ class MainActivity : AppCompatActivity() {
 
             }
 
-            private fun eliminar(tarea: Tarea, viewHolder: RecyclerView.ViewHolder){
+            private fun eliminar(tarea: Tarea){
                 val listaTareasPosicion:Int = listaTareas.indexOf(tarea)
                 val listaTareasCompletaPosicion:Int = listaTareasCompleta.indexOf(tarea)
                 listaTareasCompleta.remove(tarea)
                 listaTareas.remove(tarea)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRemoved(listaTareasPosicion)
                 val res = dbPersistencia.eliminar(tarea)
                 if (res > 0)
                     Snackbar.make(rvTareas, getString(R.string.nota_eliminada), Snackbar.LENGTH_LONG).setAction("Desacer") {
-                        listaTareasCompleta.set(listaTareasCompletaPosicion, tarea)
-                        listaTareas.set(listaTareasPosicion, tarea)
+                        listaTareasCompleta.add(listaTareasCompletaPosicion, tarea)
+                        listaTareas.add(listaTareasPosicion, tarea)
                         dbPersistencia.estadoInicial(tarea)
-                        adapter.notifyDataSetChanged()
+                        adapter.notifyItemInserted(listaTareasPosicion)
 
                     }.show()
                 else

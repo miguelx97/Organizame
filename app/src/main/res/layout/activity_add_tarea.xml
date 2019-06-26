@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content" android:id="@+id/btnCategorias" android:layout_weight="0.5"
                         android:textSize="16sp"
                         android:textColor="@android:color/tertiary_text_light"
-                        android:drawableLeft="@drawable/carpeta_add_tarea"/>
+                        android:drawableLeft="@drawable/carpeta_gris"/>
             </LinearLayout>
 
 

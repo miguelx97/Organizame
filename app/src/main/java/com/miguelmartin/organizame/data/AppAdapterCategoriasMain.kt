@@ -46,7 +46,7 @@ class AppAdapterCategoriasMain(private val list: List<Categoria>)
             tvCategoria?.setBackgroundColor(categoria.color!!)
 
             itemView.setOnClickListener {
-                mainActivity.cargarItems(arrayOf(categoria.id.toString()))
+                mainActivity.cargarItems(categoria.id.toString(), false)
             }
 
         }

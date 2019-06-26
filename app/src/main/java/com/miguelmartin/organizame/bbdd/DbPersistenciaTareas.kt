@@ -112,24 +112,26 @@ class DbPersistenciaTareas {
         return values
     }
 
-    fun getTaresByCategoria(arrCategorias: Array<String>):ArrayList<Tarea> {
+    fun getTaresByCategoria(categoria: String, verTodo:Boolean):ArrayList<Tarea> {
         var list = ArrayList<Tarea>()
         var condiciones = ""
-        if(!arrCategorias.isEmpty()){
-            condiciones = " where 1=2"
-            arrCategorias.forEach {
-                condiciones += " or c.$COL_ID_CATE = ?"
-            }
+
+        if(!categoria.isEmpty()){
+            condiciones += " and c.$COL_ID_CATE = $categoria"
+        }
+        if(!verTodo){
+            condiciones += " and t.$COL_ESTADO = $ESTADO_INICIAL"
         }
 
         val query = "select t.$COL_ID, t.$COL_TITULO, t.$COL_DESCRIPCION, t.$COL_FECHA, t.$COL_PRIORIDAD, t.$COL_ESTADO, c.$COL_ID_CATE, c.$COL_TITULO_CATE, c.$COL_COLOR_CATE" +
                 " from $DB_TABLE_TAREAS t" +
                 " left join $DB_TABLE_CATEGORIAS c on" +
                 " t.$COL_FK_ID_CATEGORIA = c.$COL_ID_CATE" +
+                " where 1=1" +
                 condiciones +
                 " order by t.$COL_PRIORIDAD, t.$COL_FECHA, t.$COL_TITULO"
 
-        val cursor = dbManager.customQuery(query, arrCategorias)
+        val cursor = dbManager.customQuery(query, emptyArray())
 
         list.clear()
 
