@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import com.miguelmartin.organizame.R
+import com.miguelmartin.organizame.Util.ESTADO_TODOS
 import com.miguelmartin.organizame.activities.AddTareaActivity
 import com.miguelmartin.organizame.activities.MainActivity
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
@@ -40,13 +41,12 @@ class AppAdapterCategoriasMain(private val list: List<Categoria>)
         fun bind(categoria: Categoria) {
 
             tvCategoria = itemView.findViewById(R.id.tvCategoria)
-
-
             tvCategoria?.text = categoria.titulo
             tvCategoria?.setBackgroundColor(categoria.color!!)
 
             itemView.setOnClickListener {
-                mainActivity.cargarItems(categoria.id.toString(), false)
+                mainActivity.setIdCategoria(categoria.id)
+                mainActivity.cargarItems()
             }
 
         }

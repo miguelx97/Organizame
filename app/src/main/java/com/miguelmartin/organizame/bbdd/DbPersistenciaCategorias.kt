@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.miguelmartin.organizame.model.Categoria
 import java.util.*
+import kotlin.collections.ArrayList
 
 class DbPersistenciaCategorias {
 
@@ -16,7 +17,7 @@ class DbPersistenciaCategorias {
         dbManager = DbManager(context, DB_TABLE_CATEGORIAS)
     }
 
-    fun getItems(filtro:String):List<Categoria> {
+    fun getItems(filtro:String):ArrayList<Categoria> {
         var list = ArrayList<Categoria>()
         var projection = arrayOf(COL_ID_CATE, COL_TITULO_CATE, COL_COLOR_CATE)
         val selectionArgs= arrayOf(filtro)

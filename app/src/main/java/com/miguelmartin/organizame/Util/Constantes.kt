@@ -15,6 +15,10 @@ val NOTIFICACION_TITULO = "notifTitulo"
 val NOTIFICACION_MENSAJE = "notifMensaje"
 
 //ESTADOS
+const val ESTADO_TODOS = 0
 const val ESTADO_INICIAL = 1
 const val ESTADO_ARCHIVADO = 2
 const val ESTADO_ELIMINADO = 3
+
+//CATEGORIAS
+const val SIN_CATEGORIA = -1

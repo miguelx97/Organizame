@@ -12,6 +12,19 @@
           <!--android:title="Categorías"-->
           <!--android:orderInCategory="100"-->
           <!--app:showAsAction="always|withText" android:icon="@drawable/carpeta_mas"/>-->
+
+    <item android:id="@+id/itemArchivados"
+    android:title="Archivados"
+    android:icon="@drawable/archivar"
+    android:orderInCategory="100"
+    app:showAsAction="always"/>
+
+    <item android:id="@+id/itemBorrados"
+          android:title="Borrados"
+          android:icon="@drawable/filtro"
+          android:orderInCategory="100"
+          app:showAsAction="always"/>
+
     <item
             android:id="@+id/mSearch"
             android:icon="@drawable/lupa"

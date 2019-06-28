@@ -6,6 +6,7 @@ import android.util.Log
 import com.miguelmartin.organizame.Util.ESTADO_ARCHIVADO
 import com.miguelmartin.organizame.Util.ESTADO_ELIMINADO
 import com.miguelmartin.organizame.Util.ESTADO_INICIAL
+import com.miguelmartin.organizame.Util.SIN_CATEGORIA
 import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
 import java.text.SimpleDateFormat
@@ -112,15 +113,15 @@ class DbPersistenciaTareas {
         return values
     }
 
-    fun getTaresByCategoria(categoria: String, verTodo:Boolean):ArrayList<Tarea> {
+    fun getTaresByCategoria(categoria: Int, ver:Int):ArrayList<Tarea> {
         var list = ArrayList<Tarea>()
         var condiciones = ""
 
-        if(!categoria.isEmpty()){
+        if(categoria != SIN_CATEGORIA){
             condiciones += " and c.$COL_ID_CATE = $categoria"
         }
-        if(!verTodo){
-            condiciones += " and t.$COL_ESTADO = $ESTADO_INICIAL"
+        if(ver != 0){
+            condiciones += " and t.$COL_ESTADO = $ver"
         }
 
         val query = "select t.$COL_ID, t.$COL_TITULO, t.$COL_DESCRIPCION, t.$COL_FECHA, t.$COL_PRIORIDAD, t.$COL_ESTADO, c.$COL_ID_CATE, c.$COL_TITULO_CATE, c.$COL_COLOR_CATE" +
@@ -130,6 +131,7 @@ class DbPersistenciaTareas {
                 " where 1=1" +
                 condiciones +
                 " order by t.$COL_PRIORIDAD, t.$COL_FECHA, t.$COL_TITULO"
+
 
         val cursor = dbManager.customQuery(query, emptyArray())
 

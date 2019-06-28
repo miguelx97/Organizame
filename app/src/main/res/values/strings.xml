@@ -21,4 +21,6 @@
     <string name="si">Sí</string>
     <string name="no">No</string>
     <string name="nota_eliminada">La nota ha sido eliminada</string>
+    <string name="filtros">Filtros</string>
+    <string name="archivado">Archivado</string>
 </resources>

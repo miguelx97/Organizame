@@ -6,6 +6,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -28,7 +29,9 @@ import com.miguelmartin.organizame.model.Tarea
 
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.widget.Toast
+import com.miguelmartin.organizame.Util.*
 import kotlin.collections.ArrayList
 
 
@@ -39,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         lateinit var listaTareas: ArrayList<Tarea>
         lateinit var context: Context
         lateinit var adapter:AppAdapter
+        var estado:Int = ESTADO_INICIAL
+        var idCategoria:Int = SIN_CATEGORIA
     }
 
     lateinit var dbPersistencia:DbPersistenciaTareas
@@ -47,7 +52,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var iconoSwipe: Drawable
     private lateinit var fondoSwipe: ColorDrawable
     var selectedItems:BooleanArray? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        cargarItems("", true)
+        cargarItems()
         cargarCategorias()
     }
 
@@ -108,22 +112,31 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item != null) {
             when(item.itemId){
-//                R.id.itemNuevaCategoria -> { //ir a addCategorias
-//                    var intent = Intent(this, GestionCategoriasActivity::class.java)
-//                    startActivity(intent)
-//                }
-//
-//                R.id.itemCategorias -> { //ir a Categorias
-//                    modalCategorias()
-//                }
+                R.id.itemArchivados -> { //ir a addCategorias
+                    if(estado == ESTADO_INICIAL){
+                        estado = ESTADO_ARCHIVADO
+                        cargarItems()
+                        item.setIcon(R.drawable.inbox);
+                        supportActionBar!!.title = getString(R.string.archivado)
+                    } else{
+                        estado = ESTADO_INICIAL
+                        cargarItems()
+                        item.setIcon(R.drawable.archivar);
+                        supportActionBar!!.title = getString(R.string.app_name)
+                    }
+                }
+                R.id.itemBorrados -> { //ir a Categorias
+                    estado = ESTADO_ELIMINADO
+                    cargarItems()
+                }
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    fun cargarItems(categoria: String, verTodo:Boolean) {
+    fun cargarItems() {
         dbPersistencia = DbPersistenciaTareas(context)
-        listaTareasCompleta = dbPersistencia.getTaresByCategoria(categoria, verTodo)
+        listaTareasCompleta = dbPersistencia.getTaresByCategoria(idCategoria, estado)
         listaTareas = ArrayList()
         listaTareasCompleta.forEach {
             listaTareas.add(it)
@@ -142,7 +155,13 @@ class MainActivity : AppCompatActivity() {
     private fun cargarCategorias() {
         dbPersistenciaCategorias = DbPersistenciaCategorias(this)
         val categorias = dbPersistenciaCategorias.getItems("%")
+        val limpiarCategorias = Categoria(SIN_CATEGORIA, "Limpiar", Color.WHITE)
+        categorias.add(0,limpiarCategorias)
         rellenarRecyclerViewCategorias(categorias)
+    }
+
+    fun setIdCategoria(id:Int){
+       idCategoria = id
     }
 
     private fun rellenarRecyclerViewCategorias(itemsList:List<Categoria>){
@@ -161,40 +180,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun modalCategorias(){
+    fun modalFiltros(){
 
-        dbPersistenciaCategorias = DbPersistenciaCategorias(this)
+        val arrItems:Array<String> = arrayOf("Principal", "Archivados", "Eliminados")
+        selectedItems =  BooleanArray(arrItems.size){false}
 
-        val listaCategorias: List<Categoria> = dbPersistenciaCategorias.getItems("%")
-
-        val arrItems = arrayOfNulls<String>(listaCategorias.size)
-        if (selectedItems == null)
-                selectedItems =  BooleanArray(listaCategorias.size){false}
-
-        var i = 0
-        listaCategorias.forEach {
-            arrItems[i++] = it.titulo
-        }
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.categorias))
+        builder.setTitle(getString(R.string.filtros))
 
         builder.setMultiChoiceItems(arrItems, selectedItems) { _, _, _ ->  }//onClick al checkear      dialog, which, isChecked
 
         builder.setNegativeButton("Cancelar"){ dialog, _ -> dialog.dismiss() }
 
-        builder.setPositiveButton("Aceptar") {_, _ ->
-            var lCategorias = ArrayList<String>()
-            for (i in 0 until listaCategorias.size){
-                if (selectedItems!![i]) {
-                    lCategorias.add(listaCategorias[i].id.toString())
+        builder.setNeutralButton("Limpiar"){_,_ -> }
+
+        builder.setPositiveButton("Aceptar") {dialog, which ->
+            var itemsSeleccionados = ArrayList<Int>()
+            for (i in 0 until selectedItems!!.size){
+                if (selectedItems!![i]) {   //si el item está seleccionado
+                    itemsSeleccionados.add(i+1) //guarda la posicion+1 que es el número que representa el estado
                 }
             }
 
-            val arrCategorias = Array<String>(lCategorias.size){""}
-            lCategorias.toArray(arrCategorias)
-
-            cargarItems("",false)
+            cargarItems()
 
         }
 
@@ -217,8 +226,6 @@ class MainActivity : AppCompatActivity() {
                 if(direction == ItemTouchHelper.RIGHT){
                     eliminar(listaTareas.get(viewHolder.adapterPosition))
                 }
-
-
                 else if(direction == ItemTouchHelper.LEFT)
                     archivar(listaTareas.get(viewHolder.adapterPosition))
 
@@ -244,10 +251,16 @@ class MainActivity : AppCompatActivity() {
             }
 
             private fun archivar(tarea: Tarea){
-                (listaTareasCompleta as ArrayList<Tarea>).remove(tarea)
+                listaTareasCompleta.remove(tarea)
                 listaTareas.remove(tarea)
                 adapter.notifyDataSetChanged()
-                val res = dbPersistencia.archivar(tarea)
+                var res = 0
+                if(estado == ESTADO_INICIAL){
+                    res = dbPersistencia.archivar(tarea)
+                } else if(estado == ESTADO_ARCHIVADO){
+                    res = dbPersistencia.estadoInicial(tarea)
+                }
+
                 if (res > 0)
                     Toast.makeText(this@MainActivity, getString(R.string.nota_eliminada), Toast.LENGTH_SHORT).show()
                 else

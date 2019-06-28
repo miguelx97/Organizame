@@ -16,8 +16,6 @@ class SwipeRecyclerViewActions(context: Context) : ItemTouchHelper.SimpleCallbac
         return false
     }
 
-    override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {}
 
 }

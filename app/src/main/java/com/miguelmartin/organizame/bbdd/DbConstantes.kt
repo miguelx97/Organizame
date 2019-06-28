@@ -38,7 +38,7 @@ const val sqlCreateTableCategorias=
 const val QUERY_GET_NEXT_TAREAS_BY_FECHA =
     "SELECT $COL_ID, $COL_TITULO, $COL_DESCRIPCION, $COL_PRIORIDAD, $COL_FECHA" +
             " FROM $DB_TABLE_TAREAS" +
-            " WHETE $COL_FECHA > ?" +
+            " WHERE $COL_FECHA > ?" +
             " ORDER BY $COL_FECHA"
 
 const val QUERY_GET_TAREAS_BY_CATEGORIA = ""
