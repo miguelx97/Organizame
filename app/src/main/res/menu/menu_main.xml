@@ -3,27 +3,11 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.miguelmartin.organizame.activities.MainActivity">
 
-    <!--<item android:id="@+id/itemCategorias"-->
-          <!--android:title="Categorías"-->
-          <!--android:orderInCategory="100"-->
-          <!--app:showAsAction="always|withText" android:icon="@drawable/carpeta_blanca"/>-->
-
-    <!--<item android:id="@+id/itemNuevaCategoria"-->
-          <!--android:title="Categorías"-->
-          <!--android:orderInCategory="100"-->
-          <!--app:showAsAction="always|withText" android:icon="@drawable/carpeta_mas"/>-->
-
     <item android:id="@+id/itemArchivados"
     android:title="Archivados"
     android:icon="@drawable/archivar"
     android:orderInCategory="100"
     app:showAsAction="always"/>
-
-    <item android:id="@+id/itemBorrados"
-          android:title="Borrados"
-          android:icon="@drawable/filtro"
-          android:orderInCategory="100"
-          app:showAsAction="always"/>
 
     <item
             android:id="@+id/mSearch"

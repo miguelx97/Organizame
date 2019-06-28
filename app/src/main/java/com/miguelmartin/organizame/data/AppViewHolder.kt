@@ -67,7 +67,7 @@ class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         } else{
 
         }
-//        descripcion = tarea.estado.toString()   //TODO: QUITAR
+
         if(!descripcion.equals("")){
             tvDescripcion.text = descripcion
         } else{

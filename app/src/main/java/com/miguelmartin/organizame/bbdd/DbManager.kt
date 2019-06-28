@@ -38,7 +38,7 @@ class DbManager {
 
             // If you need to add a new column
             if (newVersion > oldVersion) {
-                db?.execSQL("ALTER TABLE $DB_TABLE_TAREAS ADD COLUMN $COL_ESTADO INTEGER DEFAULT $ESTADO_INICIAL");
+//                db?.execSQL("ALTER TABLE $DB_TABLE_TAREAS ADD COLUMN $COL_ESTADO INTEGER DEFAULT $ESTADO_INICIAL");
             }
         }
 
