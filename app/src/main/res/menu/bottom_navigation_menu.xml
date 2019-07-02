@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Principal" android:id="@+id/item_inbox" android:icon="@drawable/inbox"/>
+    <item android:title="Archivados" android:id="@+id/item_archivados" android:icon="@drawable/archivar"/>
+    <item android:title="Eliminados" android:id="@+id/item_eliminados" android:icon="@drawable/papelera_blanca"/>
+
+</menu>

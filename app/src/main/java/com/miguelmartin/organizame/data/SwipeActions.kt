@@ -2,7 +2,6 @@ package com.miguelmartin.organizame.data
 
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -12,9 +11,8 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.widget.Toast
 import com.miguelmartin.organizame.R
-import com.miguelmartin.organizame.Util.ESTADO_ARCHIVADO
-import com.miguelmartin.organizame.Util.ESTADO_ELIMINADO
-import com.miguelmartin.organizame.Util.ESTADO_INICIAL
+import com.miguelmartin.organizame.util.ESTADO_ARCHIVADO
+import com.miguelmartin.organizame.util.ESTADO_ELIMINADO
 import com.miguelmartin.organizame.activities.MainActivity
 import com.miguelmartin.organizame.activities.MainActivity.Companion.estado
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
@@ -27,6 +25,7 @@ class SwipeActions(context: Context, dbPersistencia:DbPersistenciaTareas) : Item
             private lateinit var fondoSwipe: ColorDrawable
             val context = context
             val dbPersistencia:DbPersistenciaTareas = dbPersistencia
+            var accion:String = ""
 
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -51,17 +50,27 @@ class SwipeActions(context: Context, dbPersistencia:DbPersistenciaTareas) : Item
                 MainActivity.listaTareasCompleta.remove(tarea)
                 MainActivity.listaTareas.remove(tarea)
                 MainActivity.adapter.notifyItemRemoved(listaTareasPosicion)
-                val res = dbPersistencia.eliminar(tarea)
-                if (res > 0)
-                    Snackbar.make(viewHolder.itemView, context.getResources().getString(R.string.nota_eliminada), Snackbar.LENGTH_LONG).setAction("Desacer") {
-                        MainActivity.listaTareasCompleta.add(listaTareasCompletaPosicion, tarea)
-                        MainActivity.listaTareas.add(listaTareasPosicion, tarea)
-                        dbPersistencia.estadoInicial(tarea)
-                        MainActivity.adapter.notifyItemInserted(listaTareasPosicion)
-
-                    }.show()
-                else
-                    Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show()
+                var res = 0
+                if(estado != ESTADO_ELIMINADO){
+                    res = dbPersistencia.eliminar(tarea)
+                    accion = "eliminada"
+                    if (res > 0)
+                        Snackbar.make(viewHolder.itemView, context.getResources().getString(R.string.nota_accion, accion), Snackbar.LENGTH_LONG).setAction("Deshacer") {
+                            MainActivity.listaTareasCompleta.add(listaTareasCompletaPosicion, tarea)
+                            MainActivity.listaTareas.add(listaTareasPosicion, tarea)
+                            dbPersistencia.estadoInicial(tarea)
+                            MainActivity.adapter.notifyItemInserted(listaTareasPosicion)
+                        }.show()
+                    else
+                        Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show()
+                } else {
+                    res = dbPersistencia.estadoInicial(tarea)
+                    accion = "salvada"
+                    if (res > 0)
+                        Toast.makeText(context, context.getResources().getString(R.string.nota_accion, accion), Toast.LENGTH_SHORT).show()
+                    else
+                        Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show()
+                }
             }
 
             private fun archivar(tarea: Tarea){
@@ -69,14 +78,16 @@ class SwipeActions(context: Context, dbPersistencia:DbPersistenciaTareas) : Item
                 MainActivity.listaTareas.remove(tarea)
                 MainActivity.adapter.notifyDataSetChanged()
                 var res = 0
-                if(MainActivity.estado == ESTADO_INICIAL){
+                if(estado != ESTADO_ARCHIVADO){
                     res = dbPersistencia.archivar(tarea)
-                } else if(MainActivity.estado == ESTADO_ARCHIVADO){
+                    accion = "archivada"
+                } else {
                     res = dbPersistencia.estadoInicial(tarea)
+                    accion = "desarchivada"
                 }
 
                 if (res > 0)
-                    Toast.makeText(context, "Nota archivada", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getResources().getString(R.string.nota_accion, accion), Toast.LENGTH_SHORT).show()
                 else
                     Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show()
 

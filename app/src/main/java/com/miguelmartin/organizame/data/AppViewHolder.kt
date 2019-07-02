@@ -1,8 +1,6 @@
 package com.miguelmartin.organizame.data
 
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +11,10 @@ import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.activities.AddTareaActivity
 import com.miguelmartin.organizame.activities.IMPORTANTE
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
-import com.miguelmartin.organizame.Util.formatoFecha
-import com.miguelmartin.organizame.Util.formatoHora
-import com.miguelmartin.organizame.Util.formatoSegundos
+import com.miguelmartin.organizame.util.formatoFecha
+import com.miguelmartin.organizame.util.formatoHora
+import com.miguelmartin.organizame.util.formatoSegundos
 import com.miguelmartin.organizame.model.Tarea
-import java.text.SimpleDateFormat
 
 
 class AppViewHolder(inflater: LayoutInflater, parent: ViewGroup) :

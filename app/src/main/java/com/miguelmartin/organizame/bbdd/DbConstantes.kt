@@ -1,6 +1,6 @@
 package com.miguelmartin.organizame.bbdd
 
-import com.miguelmartin.organizame.Util.ESTADO_INICIAL
+import com.miguelmartin.organizame.util.ESTADO_INICIAL
 
 const val DB_TABLE_TAREAS= "tareas"
 const val COL_ID= "id"
@@ -39,6 +39,7 @@ const val QUERY_GET_NEXT_TAREAS_BY_FECHA =
     "SELECT $COL_ID, $COL_TITULO, $COL_DESCRIPCION, $COL_PRIORIDAD, $COL_FECHA" +
             " FROM $DB_TABLE_TAREAS" +
             " WHERE $COL_FECHA > ?" +
+            " AND $COL_ESTADO = $ESTADO_INICIAL" +
             " ORDER BY $COL_FECHA"
 
 const val QUERY_GET_TAREAS_BY_CATEGORIA = ""

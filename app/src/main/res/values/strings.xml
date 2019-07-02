@@ -6,6 +6,7 @@
     <string name="editar">Editar</string>
     <string name="eliminar">Eliminar</string>
     <string name="anadir">Añadir</string>
+    <string name="guardar">Guardar</string>
     <string name="escoge_fecha">escoge fecha</string>
     <string name="escoge_hora">escoge hora</string>
     <string name="nombre">Nombre</string>
@@ -20,7 +21,11 @@
     <string name="seguro_eliminar_nota">¿Seguro que desea eliminar esta nota?</string>
     <string name="si">Sí</string>
     <string name="no">No</string>
-    <string name="nota_eliminada">La nota ha sido eliminada</string>
+    <string name="nota_accion">La nota ha sido %s</string>
     <string name="filtros">Filtros</string>
     <string name="archivado">Archivado</string>
+    <string name="volver">Volver</string>
+    <string name="seguro_descartar_cambios">Al volver se descartarán los cambios realizados ¿Está seguro?</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="descartar">Descartar</string>
 </resources>

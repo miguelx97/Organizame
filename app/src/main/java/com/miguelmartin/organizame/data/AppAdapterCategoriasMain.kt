@@ -1,21 +1,12 @@
 package com.miguelmartin.organizame.data
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import com.miguelmartin.organizame.R
-import com.miguelmartin.organizame.Util.ESTADO_TODOS
-import com.miguelmartin.organizame.activities.AddTareaActivity
 import com.miguelmartin.organizame.activities.MainActivity
-import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
-import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
 import com.miguelmartin.organizame.model.Categoria
-import com.miguelmartin.organizame.model.Tarea
 
 
 class AppAdapterCategoriasMain(private val list: List<Categoria>)

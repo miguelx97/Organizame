@@ -7,12 +7,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
-import android.view.MenuItem
 import android.widget.SearchView
 import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
@@ -24,7 +24,7 @@ import com.miguelmartin.organizame.model.Tarea
 
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v7.widget.helper.ItemTouchHelper
-import com.miguelmartin.organizame.Util.*
+import com.miguelmartin.organizame.util.*
 import com.miguelmartin.organizame.data.SwipeActions
 import kotlin.collections.ArrayList
 
@@ -56,6 +56,10 @@ class MainActivity : AppCompatActivity() {
 
         context = this
 
+        bottomNavigationMenu.setOnNavigationItemSelectedListener(bottomNavigationMenuListener)
+
+
+
         //Float button
         fbAdd.setOnClickListener {
             //ir a AddTareaActivity
@@ -67,9 +71,6 @@ class MainActivity : AppCompatActivity() {
             var intent = Intent(this, GestionCategoriasActivity::class.java)
             startActivity(intent)
         }
-
-
-
     }
 
     override fun onResume() {
@@ -101,26 +102,45 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item != null) {
-            when(item.itemId){
-                R.id.itemArchivados -> { //ir a addCategorias
-                    if(estado == ESTADO_INICIAL){
-                        estado = ESTADO_ARCHIVADO
-                        cargarItems()
-                        item.setIcon(R.drawable.inbox);
-                        supportActionBar!!.title = getString(R.string.archivado)
-                    } else{
-                        estado = ESTADO_INICIAL
-                        cargarItems()
-                        item.setIcon(R.drawable.archivar);
-                        supportActionBar!!.title = getString(R.string.app_name)
-                    }
-                }
+
+    private val bottomNavigationMenuListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.item_inbox -> {
+                estado = ESTADO_INICIAL
+                cargarItems()
+            }
+            R.id.item_archivados -> {
+                estado = ESTADO_ARCHIVADO
+                cargarItems()
+            }
+            R.id.item_eliminados -> {
+                estado = ESTADO_ELIMINADO
+                cargarItems()
             }
         }
-        return super.onOptionsItemSelected(item)
+        return@OnNavigationItemSelectedListener true
     }
+
+//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+//        if (item != null) {
+//            when(item.itemId){
+//                R.id.itemArchivados -> { //ir a addCategorias
+//                    if(estado == ESTADO_INICIAL){
+//                        estado = ESTADO_ARCHIVADO
+//                        cargarItems()
+//                        item.setIcon(R.drawable.inbox);
+//                        supportActionBar!!.title = getString(R.string.archivado)
+//                    } else{
+//                        estado = ESTADO_INICIAL
+//                        cargarItems()
+//                        item.setIcon(R.drawable.archivar);
+//                        supportActionBar!!.title = getString(R.string.app_name)
+//                    }
+//                }
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
     fun cargarItems() {
         dbPersistencia = DbPersistenciaTareas(context)
@@ -143,7 +163,7 @@ class MainActivity : AppCompatActivity() {
     private fun cargarCategorias() {
         dbPersistenciaCategorias = DbPersistenciaCategorias(this)
         val categorias = dbPersistenciaCategorias.getItems("%")
-        val limpiarCategorias = Categoria(SIN_CATEGORIA, "Limpiar", Color.WHITE)
+        val limpiarCategorias = Categoria(SIN_CATEGORIA, "Todo", Color.WHITE)
         categorias.add(0,limpiarCategorias)
         rellenarRecyclerViewCategorias(categorias)
     }

@@ -1,15 +1,12 @@
-package com.miguelmartin.organizame.Util
+package com.miguelmartin.organizame.util
 
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
-import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
+import android.widget.Toast
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
 import com.miguelmartin.organizame.model.Tarea
-import java.util.*
 
 class SetReminder{
 
@@ -21,7 +18,7 @@ class SetReminder{
     fun setTime(){
 
         val tarea:Tarea = DbPersistenciaTareas(context!!).getNextByFecha()
-
+        Toast.makeText(context, tarea.titulo, Toast.LENGTH_LONG).show()
         if(tarea.fecha != null){
             val am= context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -33,7 +30,6 @@ class SetReminder{
 
             am.set(AlarmManager.RTC_WAKEUP,tarea.fecha!!.getTime(), pi)
 
-//            am.setRepeating(AlarmManager.RTC_WAKEUP,tarea.fecha!!.getTime(),  AlarmManager.INTERVAL_DAY,pi)
         }
 
         

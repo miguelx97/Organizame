@@ -1,11 +1,10 @@
-package com.miguelmartin.organizame.Util
+package com.miguelmartin.organizame.util
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.support.v4.app.NotificationCompat
 import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.activities.MainActivity

@@ -93,8 +93,7 @@ class GestionCategoriasActivity : AppCompatActivity() {
         val colorPicker = ColorPicker(this)
         gradientDrawable  = viewColor.getBackground().mutate() as GradientDrawable
 
-        val colors: ArrayList<String> = arrayListOf("#FFFFFF","#FBFCFC", "#F2D7D5", "#FADBD8", "#FDEDEC", "#E8DAEF", "#D4E6F1",
-            "#D6EAF8", "#D1F2EB", "#D0ECE7", "#D4EFDF", "#D5F5E3", "#FCF3CF", "#FDEBD0", "#FAE5D3", "#F6DDCC")
+        val colors: ArrayList<String> = arrayListOf("#FFFFFF", "#FFEBEE", "#FCE4EC", "#F3E5F5", "#EDE7F6", "#E8EAF6", "#E3F2FD", "#E1F5FE", "#E0F7FA", "#E0F2F1", "#E8F5E9", "#F1F8E9", "#F9FBE7", "#FFFDE7", "#FFF8E1", "#FFF3E0", "#FBE9E7", "#EFEBE9", "#ECEFF1")
 
         colorPicker
             .setColors(colors)
@@ -117,7 +116,7 @@ class GestionCategoriasActivity : AppCompatActivity() {
 
 
     private fun cargarItems(filtro:String) {
-        val categorias:ArrayList<Categoria> = dbPersistencia.getItems(filtro) as ArrayList<Categoria>
+        val categorias:ArrayList<Categoria> = dbPersistencia.getItems(filtro)
         rellenarRecyclerCiew(categorias)
     }
 

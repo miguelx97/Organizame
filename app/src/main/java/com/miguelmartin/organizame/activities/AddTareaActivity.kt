@@ -9,26 +9,28 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import com.miguelmartin.organizame.R
-import com.miguelmartin.organizame.Util.SetReminder
+import com.miguelmartin.organizame.util.*
 import com.miguelmartin.organizame.bbdd.DB_TABLE_TAREAS
 import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
 import com.miguelmartin.organizame.bbdd.DbPersistenciaTareas
-import com.miguelmartin.organizame.Util.formatoFecha
-import com.miguelmartin.organizame.Util.formatoHora
-import com.miguelmartin.organizame.Util.formatoSegundos
 import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
 import kotlinx.android.synthetic.main.activity_add_tarea.*
 import java.util.*
 
-
 const val IMPORTANTE = 1
 const val NO_IMPORTANTE = 3
+
+const val ANADIR = 1
+const val MODIFICAR = 2
+
 
 class AddTareaActivity : AppCompatActivity() {
 
@@ -37,8 +39,11 @@ class AddTareaActivity : AppCompatActivity() {
     var tarea = Tarea()
     var fechaVisible = false
     var importante = false
-    lateinit var dbPersistenciaCategorias:DbPersistenciaCategorias
+    var estado = 0
+    var idCategoria = 0
 
+    lateinit var dbPersistenciaCategorias:DbPersistenciaCategorias
+    lateinit var itemEliminar:MenuItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,15 +52,18 @@ class AddTareaActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar.bringToFront();
 
+        if (intent.getSerializableExtra(DB_TABLE_TAREAS) == null) estado = ANADIR
+        else estado = MODIFICAR
 
-        if (intent.getSerializableExtra(DB_TABLE_TAREAS) != null){     //MODIFICAR
+        if (estado == MODIFICAR){     //MODIFICAR
             tarea = intent.getSerializableExtra(DB_TABLE_TAREAS) as Tarea
             supportActionBar!!.title = "Modificar nota"
-            btnAnadir.text = "Modificar"
+//            btnAnadir.text = "Modificar"
 
             etTitulo.setText(tarea.titulo)
             etTitulo.visibility = View.INVISIBLE
             tvTitulo.setText(tarea.titulo)
+            idCategoria = tarea.categoria.id
 
             etDescripcion.setText(tarea.descripcion)
             etDescripcion.visibility = View.INVISIBLE
@@ -101,12 +109,14 @@ class AddTareaActivity : AppCompatActivity() {
                 cambiarEstadoItem(btnCategorias, false)
             }
 
-            btnEliminar.visibility = View.VISIBLE
+
+//            btnEliminar.visibility = View.VISIBLE
             id=tarea.id
 
         } else{                                                 //NUEVA
             supportActionBar!!.title = "Nueva Nota"
-            btnEliminar.visibility = View.INVISIBLE
+//            btnEliminar.visibility = View.INVISIBLE
+
             cambiarEstadoItem(ivCalendario, false)
             cambiarEstadoItem(ivReloj, false)
             cambiarEstadoItem(btnImportante, false)
@@ -114,7 +124,7 @@ class AddTareaActivity : AppCompatActivity() {
         }
 
 
-        btnAnadir.setOnClickListener { ocAnadirModificar() }
+//        btnAnadir.setOnClickListener { ocAnadirModificar() }
 
         lyFecha.setOnClickListener(){ ocFecha() }
 
@@ -126,7 +136,7 @@ class AddTareaActivity : AppCompatActivity() {
 
         btnImportante.setOnClickListener { ocImportante() }
 
-        btnEliminar.setOnClickListener{ ocEliminar() }
+//        btnEliminar.setOnClickListener{ ocEliminar() }
 
         tvTitulo.setOnClickListener {
             tvTitulo.visibility = View.INVISIBLE
@@ -138,6 +148,31 @@ class AddTareaActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_gestion, menu)
+        itemEliminar = menu!!.findItem(R.id.itemEliminar)
+        if(estado == ANADIR){
+            itemEliminar.setVisible(false)
+        } else{
+            itemEliminar.setVisible(true)
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item != null) {
+            when(item.itemId){
+                R.id.itemEliminar -> { //eliminar
+                    ocEliminar()
+                }
+                R.id.itemGuardar -> { //guardar
+                    ocAnadirModificar()
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun ocEliminar() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.eliminar_nota))
@@ -145,16 +180,16 @@ class AddTareaActivity : AppCompatActivity() {
         builder.setPositiveButton(getString(R.string.si)){_, _ ->
             val dbPersistencia = DbPersistenciaTareas(this)
             val res = dbPersistencia.eliminar(tarea)
-            if (res > 0)
-                Toast.makeText(this, getString(R.string.nota_eliminada), Toast.LENGTH_SHORT).show()
+            if (res > 0){
+                SetReminder(this).setTime()
+                Toast.makeText(this, getString(R.string.nota_accion, "eliminada"), Toast.LENGTH_SHORT).show()
+            }
             else
                 Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show()
             finish()
         }
         builder.setNegativeButton(getString(R.string.no)){dialog,_ ->
             dialog.dismiss()
-        }
-        builder.setNeutralButton("Cancel"){_,_ ->
         }
         val dialog: AlertDialog = builder.create()
         dialog.show()
@@ -183,21 +218,7 @@ class AddTareaActivity : AppCompatActivity() {
 
 
     private fun ocAnadirModificar() {
-        tarea.titulo = etTitulo.text.toString()
-        tarea.descripcion = etDescripcion.text.toString()
-        var fecha: Date? = null
-        if(!tvFecha.text.equals(getString(R.string.escoge_fecha)) || !tvHora.text.equals(getString(R.string.escoge_hora))){
-            fecha = cal.getTime()
-        }
-
-        tarea.fecha = fecha
-
-
-        if (importante){
-            tarea.prioridad = IMPORTANTE
-        } else{
-            tarea.prioridad = NO_IMPORTANTE
-        }
+        tarea = setData()
 
         val dbPersistencia = DbPersistenciaTareas(this)
 
@@ -214,12 +235,34 @@ class AddTareaActivity : AppCompatActivity() {
 
         if (res > 0) {
             Toast.makeText(this, "la nota ha sido $action", Toast.LENGTH_LONG).show()
-            if(fecha != null) SetReminder(this).setTime()
+            if(tarea.fecha != null) SetReminder(this).setTime()
             finish()
 
         } else {
             Toast.makeText(this, "ERROR", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun setData():Tarea {
+        var tarea = Tarea(this.tarea)
+        tarea.titulo = etTitulo.text.toString()
+        tarea.descripcion = etDescripcion.text.toString()
+        tarea.categoria.id = idCategoria
+        var fecha: Date? = null
+        if (!tvFecha.text.equals(getString(R.string.escoge_fecha)) || !tvHora.text.equals(getString(R.string.escoge_hora))) {
+            fecha = cal.getTime()
+        }
+
+        tarea.fecha = fecha
+
+
+        if (importante) {
+            tarea.prioridad = IMPORTANTE
+        } else {
+            tarea.prioridad = NO_IMPORTANTE
+        }
+
+        return tarea
     }
 
     private fun ocHora() {
@@ -259,7 +302,7 @@ class AddTareaActivity : AppCompatActivity() {
         var i = 0
         arrItems[i++] = "Sin Categoría"
         listaCategorias.forEach {
-            if(it.id == tarea.categoria.id){
+            if(it.id == idCategoria){
                 selectedItem = i
             }
             arrItems[i++] = it.titulo
@@ -268,14 +311,14 @@ class AddTareaActivity : AppCompatActivity() {
         builder.setTitle(getString(R.string.categorias))
 
         builder.setSingleChoiceItems(arrItems, selectedItem) {dialog, which ->
-            tarea.categoria.id = 0
+            idCategoria = 0
             listaCategorias.forEach {
                 if(it.titulo.equals(arrItems[which])){
-                    tarea.categoria.id = it.id
+                    idCategoria = it.id
                 }
             }
 
-            if(tarea.categoria.id != 0){
+            if(idCategoria != 0){
                 btnCategorias.setText(arrItems[which])
                 cambiarEstadoItem(btnCategorias, true);
 
@@ -290,7 +333,6 @@ class AddTareaActivity : AppCompatActivity() {
         }
 
         builder.setNeutralButton("Cancelar") { dialog,_ ->
-            // Do something when click the neutral button
             dialog.cancel()
         }
 
@@ -334,6 +376,47 @@ class AddTareaActivity : AppCompatActivity() {
             importante = false
             cambiarEstadoItem(btnImportante, false);
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+
+        if(volver()){
+            finish()
+        }
+        return false
+    }
+
+    private fun volver():Boolean {
+        if(estado == ANADIR){
+            return true
+        }
+        var tarea = setData()
+
+        if (tarea.toString() == this.tarea.toString()){
+            return true
+        }
+
+        alertVolver()
+
+        return false
+    }
+
+    private fun alertVolver() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.volver))
+        builder.setMessage(getString(R.string.seguro_descartar_cambios))
+        builder.setPositiveButton(getString(R.string.descartar)){_, _ ->
+            finish()
+        }
+        builder.setNeutralButton(getString(R.string.cancelar)){dialog,_ ->
+            dialog.cancel()
+        }
+        builder.setNegativeButton(getString(R.string.guardar)){dialog,_ ->
+            ocAnadirModificar()
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
 }

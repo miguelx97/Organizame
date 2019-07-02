@@ -3,10 +3,10 @@ package com.miguelmartin.organizame.bbdd
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log
-import com.miguelmartin.organizame.Util.ESTADO_ARCHIVADO
-import com.miguelmartin.organizame.Util.ESTADO_ELIMINADO
-import com.miguelmartin.organizame.Util.ESTADO_INICIAL
-import com.miguelmartin.organizame.Util.SIN_CATEGORIA
+import com.miguelmartin.organizame.util.ESTADO_ARCHIVADO
+import com.miguelmartin.organizame.util.ESTADO_ELIMINADO
+import com.miguelmartin.organizame.util.ESTADO_INICIAL
+import com.miguelmartin.organizame.util.SIN_CATEGORIA
 import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
 import java.text.SimpleDateFormat

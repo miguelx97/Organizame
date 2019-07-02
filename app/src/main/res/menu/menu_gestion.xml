@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:Eventapp="http://schemas.android.com/apk/res-auto">
+    <!-- This is a comment. -->
+
+    <item android:id="@+id/itemEliminar"
+          android:title="eliminar"
+          android:icon="@drawable/papelera_blanca"
+          Eventapp:showAsAction="always|withText" android:visible="false"/>
+
+    <item android:id="@+id/itemGuardar"
+          android:title="guardar"
+          android:icon="@drawable/tick"
+          Eventapp:showAsAction="always|withText"/>
+</menu>
+

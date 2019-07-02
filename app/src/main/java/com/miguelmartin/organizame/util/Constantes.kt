@@ -1,4 +1,4 @@
-package com.miguelmartin.organizame.Util
+package com.miguelmartin.organizame.util
 
 import java.text.SimpleDateFormat
 import java.util.*
