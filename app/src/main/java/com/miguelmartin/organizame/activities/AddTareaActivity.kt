@@ -24,6 +24,9 @@ import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
 import kotlinx.android.synthetic.main.activity_add_tarea.*
 import java.util.*
+import android.view.KeyEvent.KEYCODE_BACK
+import android.view.KeyEvent
+
 
 const val IMPORTANTE = 1
 const val NO_IMPORTANTE = 3
@@ -384,6 +387,12 @@ class AddTareaActivity : AppCompatActivity() {
             finish()
         }
         return false
+    }
+
+    override fun onBackPressed() {
+        if(volver()){
+            finish()
+        }
     }
 
     private fun volver():Boolean {

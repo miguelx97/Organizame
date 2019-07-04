@@ -10,6 +10,7 @@ const val COL_PRIORIDAD= "prioridad"
 const val COL_ESTADO= "estado"
 const val COL_FK_ID_CATEGORIA= "fk_id_categora"
 const val COL_FECHA= "fecha"
+const val COL_FECHA_CAMBIO_ESTADO= "fecha_cambio_estado"
 
 const val DB_TABLE_CATEGORIAS= "categorias"
 const val COL_ID_CATE= "id_cate"
@@ -23,8 +24,9 @@ const val sqlCreateTableTareas =
         " $COL_DESCRIPCION TEXT, " +
         " $COL_PRIORIDAD INTEGER, " +
         " $COL_FECHA TEXT, " +
+        " $COL_FECHA_CAMBIO_ESTADO TEXT, " +
         " $COL_FK_ID_CATEGORIA INTEGER, " +
-        " $COL_ESTADO INTEGER DEFAULT $ESTADO_INICIAL " +
+        " $COL_ESTADO INTEGER DEFAULT $ESTADO_INICIAL, " +
         " FOREIGN KEY($COL_FK_ID_CATEGORIA) REFERENCES $DB_TABLE_CATEGORIAS($COL_ID)" +
         " );"
 

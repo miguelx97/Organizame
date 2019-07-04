@@ -18,7 +18,7 @@ class SetReminder{
     fun setTime(){
 
         val tarea:Tarea = DbPersistenciaTareas(context!!).getNextByFecha()
-        Toast.makeText(context, tarea.titulo, Toast.LENGTH_LONG).show()
+
         if(tarea.fecha != null){
             val am= context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -27,7 +27,7 @@ class SetReminder{
             intent.putExtra(NOTIFICACION_MENSAJE, tarea.descripcion)
             intent.action= SERVICE_REMINDER
             val pi=PendingIntent.getBroadcast(context,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
-
+//            Toast.makeText(context, tarea.fecha.toString(), Toast.LENGTH_LONG).show()
             am.set(AlarmManager.RTC_WAKEUP,tarea.fecha!!.getTime(), pi)
 
         }

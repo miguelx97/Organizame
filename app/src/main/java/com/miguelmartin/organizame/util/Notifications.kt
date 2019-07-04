@@ -26,7 +26,7 @@ class Notifications(private val mContext: Context) {
         )
 
         mBuilder = NotificationCompat.Builder(mContext, NOTIFICATION_CHANNEL_ID)
-        mBuilder!!.setSmallIcon(R.drawable.exclamacion)
+        mBuilder!!.setSmallIcon(R.drawable.clear_all)
         mBuilder!!.setContentTitle(title)
             .setContentText(message)
             .setAutoCancel(false)

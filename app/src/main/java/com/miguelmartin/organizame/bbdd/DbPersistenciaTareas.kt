@@ -65,6 +65,7 @@ class DbPersistenciaTareas {
     }
 
     fun eliminar(tarea:Tarea):Int{
+
         return cambiarEstado(tarea.id, ESTADO_ELIMINADO)
     }
 
@@ -81,16 +82,26 @@ class DbPersistenciaTareas {
         var selectionArgs= arrayOf(id.toString())
         val cv = ContentValues()
         cv.put(COL_ESTADO, estado)
+        cv.put(COL_FECHA_CAMBIO_ESTADO, fechaToString(Date()))
 
         val res = dbManager.modificar(cv, "$COL_ID=?", selectionArgs)
 
         return res
     }
 
-    fun eliminarDefinitivo(tarea:Tarea):Int{
+    fun eliminarDefinitivo2(tarea:Tarea):Int{
         Log.w("eliminar tarea ${tarea.id}:", tarea.toString())
         val selectionArgs= arrayOf(tarea.id.toString())
         val res = dbManager.eliminar("$COL_ID=?", selectionArgs)
+        return res
+    }
+
+    fun eliminarDefinitivoHaceUnDia():Int{
+        val cal:Calendar = Calendar.getInstance()
+        cal.add(Calendar.DATE, -1)
+//        cal.add(Calendar.MINUTE, -2)
+        val selectionArgs= arrayOf(fechaToString(cal.getTime()))
+        val res = dbManager.eliminar("$COL_FECHA_CAMBIO_ESTADO < ? AND $COL_ESTADO = $ESTADO_ELIMINADO", selectionArgs)
         return res
     }
 

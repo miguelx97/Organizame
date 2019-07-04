@@ -24,6 +24,8 @@ import com.miguelmartin.organizame.model.Tarea
 
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
+import android.widget.Toast
 import com.miguelmartin.organizame.util.*
 import com.miguelmartin.organizame.data.SwipeActions
 import kotlin.collections.ArrayList
@@ -77,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         cargarItems()
         cargarCategorias()
+        SetReminder(context).setTime()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -115,6 +118,13 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.item_eliminados -> {
                 estado = ESTADO_ELIMINADO
+                val res = dbPersistencia.eliminarDefinitivoHaceUnDia()
+
+                if (res > 0)
+                    Log.w("Borrado hasta ayer", "OK")
+                else
+                    Log.w("Borrado hasta ayer", "ERROR")
+
                 cargarItems()
             }
         }
@@ -163,8 +173,11 @@ class MainActivity : AppCompatActivity() {
     private fun cargarCategorias() {
         dbPersistenciaCategorias = DbPersistenciaCategorias(this)
         val categorias = dbPersistenciaCategorias.getItems("%")
-        val limpiarCategorias = Categoria(SIN_CATEGORIA, "Todo", Color.WHITE)
-        categorias.add(0,limpiarCategorias)
+        if(!categorias.isEmpty()){
+            val limpiarCategorias = Categoria(SIN_CATEGORIA, "Todo", Color.WHITE)
+            categorias.add(0,limpiarCategorias)
+        }
+
         rellenarRecyclerViewCategorias(categorias)
     }
 
