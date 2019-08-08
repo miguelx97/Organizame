@@ -75,16 +75,16 @@ class AddTareaActivity : AppCompatActivity() {
                 tvDescripcion.setText("Añadir descripción")
             }
 
-
+/*
             if(tarea.fecha != null) {
-                tvFecha.text = formatoFecha.format(tarea.fecha)
+                btnFecha.text = formatoFecha.format(tarea.fecha)
                 cambiarEstadoItem(ivCalendario, true)
                 if(formatoSegundos.format((tarea.fecha)!!).toInt() != 0){
-                    tvHora.text = formatoHora.format(tarea.fecha)
+                    btnHora.text = formatoHora.format(tarea.fecha)
                     cambiarEstadoItem(ivReloj, true)
                 } else{
                     cambiarEstadoItem(ivReloj, false)
-                    tvHora.text = getString(R.string.escoge_hora)
+                    btnHora.text = getString(R.string.escoge_hora)
                 }
 
                 fechaVisible = true
@@ -96,7 +96,7 @@ class AddTareaActivity : AppCompatActivity() {
                 cambiarEstadoItem(ivCalendario, false)
                 cambiarEstadoItem(ivReloj, false)
             }
-
+*/
             if(tarea.prioridad == IMPORTANTE){
                 importante = true
                 cambiarEstadoItem(btnImportante, true)
@@ -120,8 +120,8 @@ class AddTareaActivity : AppCompatActivity() {
             supportActionBar!!.title = "Nueva Nota"
 //            btnEliminar.visibility = View.INVISIBLE
 
-            cambiarEstadoItem(ivCalendario, false)
-            cambiarEstadoItem(ivReloj, false)
+//            cambiarEstadoItem(ivCalendario, false)
+//            cambiarEstadoItem(ivReloj, false)
             cambiarEstadoItem(btnImportante, false)
             cambiarEstadoItem(btnCategorias, false)
         }
@@ -129,11 +129,11 @@ class AddTareaActivity : AppCompatActivity() {
 
 //        btnAnadir.setOnClickListener { ocAnadirModificar() }
 
-        lyFecha.setOnClickListener(){ ocFecha() }
+        btnFecha.setOnClickListener(){ ocFecha() }
 
-        lyHora.setOnClickListener(){ ocHora() }
+        btnHora.setOnClickListener(){ ocHora() }
 
-        btnFechaHora.setOnClickListener { addFechaHora() }
+//        btnFechaHora.setOnClickListener { addFechaHora() }
 
         btnCategorias.setOnClickListener { modalCategorias() }
 
@@ -197,7 +197,7 @@ class AddTareaActivity : AppCompatActivity() {
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
-
+/*
     private fun addFechaHora() {
         var view: Int
         if (fechaVisible) {
@@ -207,8 +207,8 @@ class AddTareaActivity : AppCompatActivity() {
             cambiarEstadoItem(ivCalendario, false)
             cambiarEstadoItem(ivReloj, false)
 
-            tvFecha.text = getString(R.string.escoge_fecha)
-            tvHora.text = getString(R.string.escoge_hora)
+            btnFecha.text = getString(R.string.escoge_fecha)
+            btnHora.text = getString(R.string.escoge_hora)
 
         } else {
             fechaVisible = true
@@ -218,7 +218,7 @@ class AddTareaActivity : AppCompatActivity() {
         lyFechaHora.visibility = view
         cal = Calendar.getInstance()
     }
-
+*/
 
     private fun ocAnadirModificar() {
         tarea = setData()
@@ -252,7 +252,7 @@ class AddTareaActivity : AppCompatActivity() {
         tarea.descripcion = etDescripcion.text.toString()
         tarea.categoria.id = idCategoria
         var fecha: Date? = null
-        if (!tvFecha.text.equals(getString(R.string.escoge_fecha)) || !tvHora.text.equals(getString(R.string.escoge_hora))) {
+        if (!btnFecha.text.equals(getString(R.string.escoge_fecha)) || !btnHora.text.equals(getString(R.string.escoge_hora))) {
             fecha = cal.getTime()
         }
 
@@ -273,8 +273,8 @@ class AddTareaActivity : AppCompatActivity() {
             cal.set(Calendar.HOUR_OF_DAY, hour)
             cal.set(Calendar.MINUTE, minute)
             cal.set(Calendar.SECOND, 1)
-            tvHora.text = formatoHora.format(cal.time)
-            cambiarEstadoItem(ivReloj, true)
+            btnHora.text = formatoHora.format(cal.time)
+//            cambiarEstadoItem(ivReloj, true)
         }
 
         TimePickerDialog(this, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
@@ -287,8 +287,8 @@ class AddTareaActivity : AppCompatActivity() {
 
         val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{_, mYear, mMonth, mDay ->
             cal.set(mYear, mMonth, mDay, 0, 0, 0)
-            tvFecha.text = formatoFecha.format(cal.time)
-            cambiarEstadoItem(ivCalendario, true)
+            btnFecha.text = formatoFecha.format(cal.time)
+//            cambiarEstadoItem(ivCalendario, true)
         },year,month,day)
 
         datePickerDialog.show()
@@ -396,9 +396,6 @@ class AddTareaActivity : AppCompatActivity() {
     }
 
     private fun volver():Boolean {
-        if(estado == ANADIR){
-            return true
-        }
         var tarea = setData()
 
         if (tarea.toString() == this.tarea.toString()){
