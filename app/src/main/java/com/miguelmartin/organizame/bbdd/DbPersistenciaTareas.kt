@@ -3,12 +3,9 @@ package com.miguelmartin.organizame.bbdd
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log
-import com.miguelmartin.organizame.util.ESTADO_ARCHIVADO
-import com.miguelmartin.organizame.util.ESTADO_ELIMINADO
-import com.miguelmartin.organizame.util.ESTADO_INICIAL
-import com.miguelmartin.organizame.util.SIN_CATEGORIA
 import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
+import com.miguelmartin.organizame.util.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -25,36 +22,30 @@ class DbPersistenciaTareas {
         dbManager = DbManager(context, DB_TABLE_TAREAS)
     }
 
-    fun getItems(filtro:String):List<Tarea> {
-        var list = ArrayList<Tarea>()
-        var projection = arrayOf(COL_ID, COL_TITULO, COL_DESCRIPCION, COL_PRIORIDAD, COL_FECHA)
+    fun getItem(filtro:String):Tarea{
+        var projection = arrayOf(COL_ID, COL_TITULO, COL_DESCRIPCION, COL_PRIORIDAD, COL_FECHA, COL_FECHA_NOTIFICACION)
         val selectionArgs= arrayOf(filtro)
-        val cursor = dbManager.getDatos(projection, "$COL_TITULO like ? ", selectionArgs, COL_FECHA)
+        val cursor = dbManager.getDatos(projection, "$COL_ID = ? ", selectionArgs, COL_ID)
 
-        list.clear()
-
-        var tarea:Tarea
+        var tarea:Tarea? = null
 
         if(cursor.moveToFirst()){
-            do {
-
                 tarea =
                     Tarea(
                         cursor.getInt(cursor.getColumnIndex(COL_ID)),
                         cursor.getString(cursor.getColumnIndex(COL_TITULO)),
                         cursor.getString(cursor.getColumnIndex(COL_DESCRIPCION)),
                         cursor.getInt(cursor.getColumnIndex(COL_PRIORIDAD)),
-                        stringToFecha(cursor.getString(cursor.getColumnIndex(COL_FECHA)))
+                        stringToFecha(cursor.getString(cursor.getColumnIndex(COL_FECHA))),
+                        Categoria(),
+                        ESTADO,
+                        stringToFecha(cursor.getString(cursor.getColumnIndex(COL_FECHA_NOTIFICACION)))
                     )
 
-                list.add(tarea)
-
                 Log.w("get tarea ${tarea.id}:", tarea.toString())
-
-            } while (cursor.moveToNext())
         }
 
-        return list
+        return tarea!!
     }
 
     fun insertar(tarea:Tarea):Int{
@@ -89,13 +80,6 @@ class DbPersistenciaTareas {
         return res
     }
 
-    fun eliminarDefinitivo2(tarea:Tarea):Int{
-        Log.w("eliminar tarea ${tarea.id}:", tarea.toString())
-        val selectionArgs= arrayOf(tarea.id.toString())
-        val res = dbManager.eliminar("$COL_ID=?", selectionArgs)
-        return res
-    }
-
     fun eliminarDefinitivoHaceUnDia():Int{
         val cal:Calendar = Calendar.getInstance()
         cal.add(Calendar.DATE, -1)
@@ -120,6 +104,7 @@ class DbPersistenciaTareas {
         values.put(COL_PRIORIDAD, tarea.prioridad)
         values.put(COL_FECHA, fechaToString(tarea.fecha))
         values.put(COL_FK_ID_CATEGORIA, tarea.categoria.id)
+        values.put(COL_FECHA_NOTIFICACION, fechaToString(tarea.fechaNotificacion))
 
         return values
     }
@@ -135,7 +120,7 @@ class DbPersistenciaTareas {
             condiciones += " and t.$COL_ESTADO = $ver"
         }
 
-        val query = "select t.$COL_ID, t.$COL_TITULO, t.$COL_DESCRIPCION, t.$COL_FECHA, t.$COL_PRIORIDAD, t.$COL_ESTADO, c.$COL_ID_CATE, c.$COL_TITULO_CATE, c.$COL_COLOR_CATE" +
+        val query = "select t.$COL_ID, t.$COL_TITULO, t.$COL_DESCRIPCION, t.$COL_FECHA, t.$COL_PRIORIDAD, t.$COL_ESTADO, t.$COL_FECHA_NOTIFICACION, c.$COL_ID_CATE, c.$COL_TITULO_CATE, c.$COL_COLOR_CATE" +
                 " from $DB_TABLE_TAREAS t" +
                 " left join $DB_TABLE_CATEGORIAS c on" +
                 " t.$COL_FK_ID_CATEGORIA = c.$COL_ID_CATE" +
@@ -165,7 +150,8 @@ class DbPersistenciaTareas {
                             cursor.getString(cursor.getColumnIndex(COL_TITULO_CATE)),
                             cursor.getInt(cursor.getColumnIndex(COL_COLOR_CATE))
                         ),
-                        cursor.getInt(cursor.getColumnIndex(COL_ESTADO))
+                        cursor.getInt(cursor.getColumnIndex(COL_ESTADO)),
+                        stringToFecha(cursor.getString(cursor.getColumnIndex(COL_FECHA_NOTIFICACION)))
                     )
 
                 list.add(tarea)
@@ -178,12 +164,12 @@ class DbPersistenciaTareas {
         return list
     }
 
-    fun getNextByFecha():Tarea {
+    fun getNextByFechaNotificacion():Tarea? {
         val selectionArgs= arrayOf(fechaToString(Date()))
-        val query = QUERY_GET_NEXT_TAREAS_BY_FECHA
+        val query = QUERY_GET_NEXT_TAREAS_BY_FECHA_NOTIFICACION
         val cursor = dbManager.customQuery(query, selectionArgs)
 
-        var tarea:Tarea = Tarea()
+        var tarea:Tarea? = null
 
         if(cursor.moveToFirst()){
             tarea =
@@ -192,17 +178,29 @@ class DbPersistenciaTareas {
                     cursor.getString(cursor.getColumnIndex(COL_TITULO)),
                     cursor.getString(cursor.getColumnIndex(COL_DESCRIPCION)),
                     cursor.getInt(cursor.getColumnIndex(COL_PRIORIDAD)),
-                    stringToFecha(cursor.getString(cursor.getColumnIndex(COL_FECHA)))
+                    stringToFecha(cursor.getString(cursor.getColumnIndex(COL_FECHA))),
+                    Categoria(),
+                    ESTADO,
+                    stringToFecha(cursor.getString(cursor.getColumnIndex(COL_FECHA_NOTIFICACION)))
                 )
+            Log.w("getNextByFechaNotificacion ${tarea.id}:", tarea.toString())
         }
-        Log.w("get tarea ${tarea.id}:", tarea.toString())
-
 
         return tarea
     }
 
+    fun cambiarFechaNotificacion(tarea:Tarea, nuevaFecha:Date):Int{
+        Log.w("FechaNotificacion de ${tarea.id} a", nuevaFecha.toString())
+        var selectionArgs= arrayOf(tarea.id.toString())
+        val cv = ContentValues()
+        cv.put(COL_FECHA_NOTIFICACION, fechaToString(nuevaFecha))
+        val res = dbManager.modificar(cv, "$COL_ID=?", selectionArgs)
 
-    val sinFecha = "sin fecha"
+        return res
+    }
+
+
+    val sinFecha = "n/a"
     val format = SimpleDateFormat("yyyyMMddkkmmss")
     fun fechaToString(date: Date?) : String {
         var fecha:String = sinFecha
@@ -211,8 +209,11 @@ class DbPersistenciaTareas {
     }
 
     fun stringToFecha(string:String?) : Date? {
+        var string:String? = string
         var fecha: Date? = null
+        if("sin fecha".equals(string) || null == string) string = sinFecha  //TEMPORAL
         if (string != sinFecha) fecha = format.parse(string)
         return fecha
     }
+
 }

@@ -171,15 +171,15 @@ class SwipeActions(context: Context, dbPersistencia:DbPersistenciaTareas) : Item
         var item = 0
         if (direction > 0)
             when (estado) {
-                ESTADO_INICIAL -> item = R.drawable.archivar
+                ESTADO_INICIAL -> item = R.drawable.ticks
                 ESTADO_ARCHIVADO -> item = R.drawable.papelera_blanca
-                ESTADO_ELIMINADO -> item = R.drawable.inbox
+                ESTADO_ELIMINADO -> item = R.drawable.cuadrados
             }
         else
             when (estado) {
                 ESTADO_INICIAL -> item = R.drawable.papelera_blanca
-                ESTADO_ARCHIVADO -> item = R.drawable.inbox
-                ESTADO_ELIMINADO -> item = R.drawable.archivar
+                ESTADO_ARCHIVADO -> item = R.drawable.cuadrados
+                ESTADO_ELIMINADO -> item = R.drawable.ticks
             }
         return item
     }

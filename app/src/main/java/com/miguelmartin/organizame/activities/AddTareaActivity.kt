@@ -9,11 +9,8 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
 import com.miguelmartin.organizame.R
 import com.miguelmartin.organizame.util.*
@@ -24,27 +21,20 @@ import com.miguelmartin.organizame.model.Categoria
 import com.miguelmartin.organizame.model.Tarea
 import kotlinx.android.synthetic.main.activity_add_tarea.*
 import java.util.*
-import android.view.KeyEvent.KEYCODE_BACK
-import android.view.KeyEvent
+import java.util.concurrent.TimeUnit
 
 
 const val IMPORTANTE = 1
 const val NO_IMPORTANTE = 3
 
-const val ANADIR = 1
-const val MODIFICAR = 2
-
-
 class AddTareaActivity : AppCompatActivity() {
 
-    var id:Int? = null
     var cal = Calendar.getInstance()
     var tarea = Tarea()
-    var fechaVisible = false
     var importante = false
-    var estado = 0
+    var nuevo:Boolean = false
     var idCategoria = 0
-
+    data class Recordatorio(var dias: Long = 0, var horas: Long = 0, var minutos: Long = 0)
     lateinit var dbPersistenciaCategorias:DbPersistenciaCategorias
     lateinit var itemEliminar:MenuItem
 
@@ -55,13 +45,12 @@ class AddTareaActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar.bringToFront();
 
-        if (intent.getSerializableExtra(DB_TABLE_TAREAS) == null) estado = ANADIR
-        else estado = MODIFICAR
+        if (intent.getSerializableExtra(DB_TABLE_TAREAS) == null) nuevo = true
 
-        if (estado == MODIFICAR){     //MODIFICAR
+        if (!nuevo){     //MODIFICAR
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             tarea = intent.getSerializableExtra(DB_TABLE_TAREAS) as Tarea
             supportActionBar!!.title = "Modificar nota"
-//            btnAnadir.text = "Modificar"
 
             etTitulo.setText(tarea.titulo)
             etTitulo.visibility = View.INVISIBLE
@@ -75,28 +64,25 @@ class AddTareaActivity : AppCompatActivity() {
                 tvDescripcion.setText("Añadir descripción")
             }
 
-/*
             if(tarea.fecha != null) {
                 btnFecha.text = formatoFecha.format(tarea.fecha)
-                cambiarEstadoItem(ivCalendario, true)
+                cambiarEstadoItem(btnFecha, true)
                 if(formatoSegundos.format((tarea.fecha)!!).toInt() != 0){
                     btnHora.text = formatoHora.format(tarea.fecha)
-                    cambiarEstadoItem(ivReloj, true)
+                    cambiarEstadoItem(btnHora, true)
                 } else{
-                    cambiarEstadoItem(ivReloj, false)
+                    cambiarEstadoItem(btnHora, false)
                     btnHora.text = getString(R.string.escoge_hora)
                 }
 
-                fechaVisible = true
-                btnFechaHora.setText("Eliminar fecha y hora")
-                lyFechaHora.setVisibility(View.VISIBLE)
-
                 cal.setTime(tarea.fecha)
             } else{
-                cambiarEstadoItem(ivCalendario, false)
-                cambiarEstadoItem(ivReloj, false)
+                cambiarEstadoItem(btnFecha, false)
+                cambiarEstadoItem(btnHora, false)
+
+                estadoRecordatorio(false)
             }
-*/
+
             if(tarea.prioridad == IMPORTANTE){
                 importante = true
                 cambiarEstadoItem(btnImportante, true)
@@ -113,33 +99,31 @@ class AddTareaActivity : AppCompatActivity() {
             }
 
 
-//            btnEliminar.visibility = View.VISIBLE
-            id=tarea.id
+            if(tarea.fechaNotificacion != null){
+                val recordatorio:Recordatorio = recordatorioToObject(tarea.fechaNotificacion!!, tarea.fecha!!)
+                etRecDias.setText(""+recordatorio.dias)
+                etRecHoras.setText(""+recordatorio.horas)
+                etRecMinutos.setText(""+recordatorio.minutos)
+            }
 
         } else{                                                 //NUEVA
             supportActionBar!!.title = "Nueva Nota"
-//            btnEliminar.visibility = View.INVISIBLE
 
-//            cambiarEstadoItem(ivCalendario, false)
-//            cambiarEstadoItem(ivReloj, false)
             cambiarEstadoItem(btnImportante, false)
             cambiarEstadoItem(btnCategorias, false)
+
+            cambiarEstadoItem(btnFecha, false)
+            cambiarEstadoItem(btnHora, false)
+
+            estadoRecordatorio(false)
         }
 
-
-//        btnAnadir.setOnClickListener { ocAnadirModificar() }
-
         btnFecha.setOnClickListener(){ ocFecha() }
-
         btnHora.setOnClickListener(){ ocHora() }
-
-//        btnFechaHora.setOnClickListener { addFechaHora() }
-
         btnCategorias.setOnClickListener { modalCategorias() }
-
         btnImportante.setOnClickListener { ocImportante() }
-
-//        btnEliminar.setOnClickListener{ ocEliminar() }
+        btnLimpiarTiempo.setOnClickListener { ocLimpiarTiempo() }
+        btnLimpiarRecordatorio.setOnClickListener { ocLimpiarRecordatorio() }
 
         tvTitulo.setOnClickListener {
             tvTitulo.visibility = View.INVISIBLE
@@ -154,7 +138,7 @@ class AddTareaActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_gestion, menu)
         itemEliminar = menu!!.findItem(R.id.itemEliminar)
-        if(estado == ANADIR){
+        if(nuevo){
             itemEliminar.setVisible(false)
         } else{
             itemEliminar.setVisible(true)
@@ -197,28 +181,6 @@ class AddTareaActivity : AppCompatActivity() {
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
-/*
-    private fun addFechaHora() {
-        var view: Int
-        if (fechaVisible) {
-            fechaVisible = false
-            view = View.INVISIBLE
-            btnFechaHora.setText(getString(R.string.poner_recordatorio))
-            cambiarEstadoItem(ivCalendario, false)
-            cambiarEstadoItem(ivReloj, false)
-
-            btnFecha.text = getString(R.string.escoge_fecha)
-            btnHora.text = getString(R.string.escoge_hora)
-
-        } else {
-            fechaVisible = true
-            view = View.VISIBLE
-            btnFechaHora.setText(getString(R.string.eliminar_recordatorio))
-        }
-        lyFechaHora.visibility = view
-        cal = Calendar.getInstance()
-    }
-*/
 
     private fun ocAnadirModificar() {
         tarea = setData()
@@ -228,7 +190,7 @@ class AddTareaActivity : AppCompatActivity() {
         var res:Int
         var action:String
 
-        if (id==null){
+        if (nuevo){
             res = dbPersistencia.insertar(tarea)
             action = "añadida"
         } else{
@@ -238,7 +200,7 @@ class AddTareaActivity : AppCompatActivity() {
 
         if (res > 0) {
             Toast.makeText(this, "la nota ha sido $action", Toast.LENGTH_LONG).show()
-            if(tarea.fecha != null) SetReminder(this).setTime()
+            if(tarea.fechaNotificacion != null) SetReminder(this).setTime()
             finish()
 
         } else {
@@ -258,12 +220,29 @@ class AddTareaActivity : AppCompatActivity() {
 
         tarea.fecha = fecha
 
-
         if (importante) {
             tarea.prioridad = IMPORTANTE
         } else {
             tarea.prioridad = NO_IMPORTANTE
         }
+
+        if(etRecMinutos.text.toString().isNotEmpty() || etRecHoras.text.toString().isNotEmpty() || etRecDias.text.toString().isNotEmpty()){
+            var recordatorio = Recordatorio()
+
+            if(etRecMinutos.text.toString().isNotEmpty()) recordatorio.minutos = etRecMinutos.text.toString().toLong()
+            else recordatorio.minutos = 0
+
+            if(etRecHoras.text.toString().isNotEmpty()) recordatorio.horas = etRecHoras.text.toString().toLong()
+            else recordatorio.horas = 0
+
+            if(etRecDias.text.toString().isNotEmpty()) recordatorio.dias = etRecDias.text.toString().toLong()
+            else recordatorio.dias = 0
+
+            tarea.fechaNotificacion = recordatorioToFecha(recordatorio, fecha!!)
+        } else{
+            tarea.fechaNotificacion = null
+        }
+
 
         return tarea
     }
@@ -274,7 +253,8 @@ class AddTareaActivity : AppCompatActivity() {
             cal.set(Calendar.MINUTE, minute)
             cal.set(Calendar.SECOND, 1)
             btnHora.text = formatoHora.format(cal.time)
-//            cambiarEstadoItem(ivReloj, true)
+            cambiarEstadoItem(btnHora, true)
+            estadoRecordatorio(true)
         }
 
         TimePickerDialog(this, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
@@ -288,10 +268,39 @@ class AddTareaActivity : AppCompatActivity() {
         val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{_, mYear, mMonth, mDay ->
             cal.set(mYear, mMonth, mDay, 0, 0, 0)
             btnFecha.text = formatoFecha.format(cal.time)
-//            cambiarEstadoItem(ivCalendario, true)
+            cambiarEstadoItem(btnFecha, true)
+            estadoRecordatorio(true)
         },year,month,day)
 
         datePickerDialog.show()
+    }
+
+    private fun ocLimpiarTiempo(){
+        cal = Calendar.getInstance()
+        cambiarEstadoItem(btnFecha, false)
+        cambiarEstadoItem(btnHora, false)
+
+        btnFecha.text = getString(R.string.escoge_fecha)
+        btnHora.text = getString(R.string.escoge_hora)
+
+        ocLimpiarRecordatorio()
+        estadoRecordatorio(false)
+    }
+
+    private fun ocLimpiarRecordatorio(){
+        etRecDias.text = null
+        etRecDias.clearFocus()
+        etRecHoras.text = null
+        etRecHoras.clearFocus()
+        etRecMinutos.text = null
+        etRecMinutos.clearFocus()
+
+    }
+
+    private fun estadoRecordatorio(estado:Boolean) {
+        etRecDias.setEnabled(estado);
+        etRecHoras.setEnabled(estado);
+        etRecMinutos.setEnabled(estado);
     }
 
     fun modalCategorias(){
@@ -329,10 +338,7 @@ class AddTareaActivity : AppCompatActivity() {
                 btnCategorias.setText(getString(R.string.categorias))
                 cambiarEstadoItem(btnCategorias, false);
             }
-
-
             dialog.dismiss()
-
         }
 
         builder.setNeutralButton("Cancelar") { dialog,_ ->
@@ -351,13 +357,6 @@ class AddTareaActivity : AppCompatActivity() {
         val drawableLeft= compoundDrawables[0].mutate();
         drawableLeft.setColorFilter(PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN))
 
-    }
-
-    fun cambiarEstadoItem(imageView:ImageView, activado:Boolean){
-        var color = getColor(activado)
-
-        val mode = PorterDuff.Mode.SRC_ATOP
-        imageView.setColorFilter(color, mode)
     }
 
     private fun getColor(activado: Boolean): Int {
@@ -423,6 +422,25 @@ class AddTareaActivity : AppCompatActivity() {
 
         val dialog: AlertDialog = builder.create()
         dialog.show()
+    }
+
+    private fun recordatorioToObject(fechaNotificacion:Date, fecha:Date):Recordatorio{
+        val milisec = fecha.getTime() - fechaNotificacion.getTime()
+        var minutos = milisec/60000
+        val dias = TimeUnit.MINUTES.toDays(minutos)
+        minutos -= TimeUnit.DAYS.toMinutes(dias)
+        val horas = TimeUnit.MINUTES.toHours(minutos)
+        minutos -= TimeUnit.HOURS.toMinutes(horas)
+
+        return Recordatorio(dias, horas,  minutos)
+    }
+
+    private fun recordatorioToFecha(recordatorio:Recordatorio, fecha: Date):Date{
+        val milisec = (recordatorio.minutos
+        + (recordatorio.horas*60)
+        + (recordatorio.dias*24*60))*60000
+
+        return Date(fecha.getTime() - milisec)
     }
 
 }

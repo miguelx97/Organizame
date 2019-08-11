@@ -25,6 +25,7 @@ import com.miguelmartin.organizame.model.Tarea
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.miguelmartin.organizame.util.*
 import com.miguelmartin.organizame.data.SwipeActions
@@ -59,8 +60,6 @@ class MainActivity : AppCompatActivity() {
         context = this
 
         bottomNavigationMenu.setOnNavigationItemSelectedListener(bottomNavigationMenuListener)
-
-
 
         //Float button
         fbAdd.setOnClickListener {
@@ -176,9 +175,10 @@ class MainActivity : AppCompatActivity() {
         if(!categorias.isEmpty()){
             val limpiarCategorias = Categoria(SIN_CATEGORIA, "Todo", Color.WHITE)
             categorias.add(0,limpiarCategorias)
+            rellenarRecyclerViewCategorias(categorias)
+        } else{
+            rvCategorias.visibility = View.GONE
         }
-
-        rellenarRecyclerViewCategorias(categorias)
     }
 
     fun setIdCategoria(id:Int){

@@ -12,12 +12,13 @@ class Tarea(
     var prioridad: Int? = NO_IMPORTANTE,
     var fecha: Date? = null,
     var categoria: Categoria = Categoria(),
-    var estado: Int = ESTADO_INICIAL
+    var estado: Int = ESTADO_INICIAL,
+    var fechaNotificacion:Date? = null
 
 ): Serializable {
 
     override fun toString(): String {
-        return "Tarea(id=$id, titulo=$titulo, descripcion=$descripcion, prioridad=$prioridad, fecha=$fecha, categoria=$categoria, estado=$estado)"
+        return "Tarea(id=$id, titulo=$titulo, descripcion=$descripcion, prioridad=$prioridad, fecha=$fecha, categoria=$categoria, estado=$estado, fechaNotificacion=$fechaNotificacion)"
     }
 
     constructor(tarea: Tarea) : this() {
@@ -28,5 +29,6 @@ class Tarea(
         this.fecha = tarea.fecha
         this.categoria = Categoria(tarea.categoria)
         this.estado = tarea.estado
+        this.fechaNotificacion = tarea.fechaNotificacion
     }
 }

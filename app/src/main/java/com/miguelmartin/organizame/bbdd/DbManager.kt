@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteQueryBuilder
 class DbManager {
 
     val dbName= "Organizame"
-    val dbVersion=3
+    val dbVersion=6
     var currentTable:String? = null
 
     var sqlDB:SQLiteDatabase?=null
@@ -37,7 +37,7 @@ class DbManager {
 
             // If you need to add a new column
             if (newVersion > oldVersion) {
-                db?.execSQL("ALTER TABLE $DB_TABLE_TAREAS ADD COLUMN $COL_FECHA_CAMBIO_ESTADO TEXT");
+                db?.execSQL("UPDATE tareas SET fecha_notificacion='n/a' WHERE fecha_notificacion=null");
             }
         }
 
@@ -68,7 +68,7 @@ class DbManager {
         return count
     }
 
-    fun customQuery(query:String, arrCategorias: Array<String>):Cursor{
+    fun customQuery(query:String, arrCategorias:Array<String>):Cursor{
         var qb=SQLiteQueryBuilder()
         qb.tables = currentTable
 
