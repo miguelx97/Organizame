@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         fbCateg.setOnClickListener {
             //ir a AddTareaActivity
             var intent = Intent(this, GestionCategoriasActivity::class.java)
+            intent.putExtra(CLASE, MainActivity::class.toString());
             startActivity(intent)
         }
     }

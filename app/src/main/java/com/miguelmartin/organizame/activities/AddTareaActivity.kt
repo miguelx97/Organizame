@@ -3,6 +3,7 @@ package com.miguelmartin.organizame.activities
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
@@ -37,6 +38,8 @@ class AddTareaActivity : AppCompatActivity() {
     data class Recordatorio(var dias: Long = 0, var horas: Long = 0, var minutos: Long = 0)
     lateinit var dbPersistenciaCategorias:DbPersistenciaCategorias
     lateinit var itemEliminar:MenuItem
+    lateinit var listaCategorias: List<Categoria>
+    lateinit var listaCategoriasOncreate: MutableList<Categoria>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +47,10 @@ class AddTareaActivity : AppCompatActivity() {
         setSupportActionBar(toolbar as Toolbar?)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar.bringToFront();
+
+        dbPersistenciaCategorias = DbPersistenciaCategorias(this)
+
+        listaCategoriasOncreate = dbPersistenciaCategorias.getItems("%")
 
         if (intent.getSerializableExtra(DB_TABLE_TAREAS) == null) nuevo = true
 
@@ -133,6 +140,24 @@ class AddTareaActivity : AppCompatActivity() {
             tvDescripcion.visibility = View.INVISIBLE
             etDescripcion.visibility = View.VISIBLE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        listaCategorias = dbPersistenciaCategorias.getItems("%")
+
+        val presuntaNuevaCategoria = listaCategorias.last()
+
+        if (presuntaNuevaCategoria.id != listaCategoriasOncreate.last().id){
+            Toast.makeText(this, presuntaNuevaCategoria.titulo, Toast.LENGTH_SHORT).show()
+            idCategoria = presuntaNuevaCategoria.id
+            categoria.titulo = presuntaNuevaCategoria.titulo
+            listaCategoriasOncreate = listaCategorias.toMutableList()
+            btnCategorias.text = presuntaNuevaCategoria.titulo
+            cambiarEstadoItem(btnCategorias, true);
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -306,9 +331,8 @@ class AddTareaActivity : AppCompatActivity() {
     fun modalCategorias(){
         val builder = AlertDialog.Builder(this)
 
-        dbPersistenciaCategorias = DbPersistenciaCategorias(this)
-        val listaCategorias: List<Categoria> = dbPersistenciaCategorias.getItems("%")
-        val arrItems = arrayOfNulls<String>(listaCategorias.size + 1)
+
+        val arrItems = arrayOfNulls<String>(listaCategorias.size + 2)
         var selectedItem = -1
 
         var i = 0
@@ -319,6 +343,7 @@ class AddTareaActivity : AppCompatActivity() {
             }
             arrItems[i++] = it.titulo
         }
+        arrItems[i++] = "Nueva Categoría"
 
         builder.setTitle(getString(R.string.categorias))
 
@@ -330,7 +355,8 @@ class AddTareaActivity : AppCompatActivity() {
                 }
             }
 
-            if(idCategoria != 0){
+            //Sin categoria           Nueva Categoría
+            if(which != 0 && which != listaCategorias.size + 1){
                 btnCategorias.setText(arrItems[which])
                 cambiarEstadoItem(btnCategorias, true);
 
@@ -338,7 +364,16 @@ class AddTareaActivity : AppCompatActivity() {
                 btnCategorias.setText(getString(R.string.categorias))
                 cambiarEstadoItem(btnCategorias, false);
             }
+
             dialog.dismiss()
+
+            if(which == listaCategorias.size + 1){
+                var intent = Intent(this, GestionCategoriasActivity::class.java)
+                intent.putExtra(CLASE, AddTareaActivity::class.toString());
+                startActivity(intent)
+            }
+
+
         }
 
         builder.setNeutralButton("Cancelar") { dialog,_ ->
@@ -349,6 +384,49 @@ class AddTareaActivity : AppCompatActivity() {
         dialog.show()
 
     }
+
+
+
+/*
+    fun showDialog(sdTarea:Tarea) {
+        val builder = AlertDialog.Builder(this)
+
+        var etTitle: EditText? = null
+        var etDes: EditText? = null
+
+        val inflater = getLayoutInflater()
+        val view = inflater.inflate(R.layout.dialog_add_categoria, null)
+
+        etTitle = view.findViewById(R.id.etTitle)
+        etDes = view.findViewById(R.id.etDes)
+
+        if (sdTarea.noteId!=null){
+            builder.setTitle("Editar Nota")
+            etTitle!!.setText(sdTarea.noteName)
+            etDes!!.setText(sdTarea.noteDes)
+        } else{
+            builder.setTitle("Nueva Nota")
+        }
+
+        builder.setView(view)
+
+        builder.setPositiveButton("Aceptar",
+            DialogInterface.OnClickListener { dialog, which ->
+                addNote(sdTarea)
+                loadItems("%")
+                dialog.dismiss()
+            })
+
+        builder.setNegativeButton("Cancelar",
+            DialogInterface.OnClickListener { dialog, which ->
+                dialog.cancel()
+            })
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+    */
+
 
     fun cambiarEstadoItem(boton:Button, activado:Boolean){
         var color = getColor(activado)

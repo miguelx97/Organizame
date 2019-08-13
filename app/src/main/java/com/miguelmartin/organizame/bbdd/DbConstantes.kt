@@ -35,7 +35,7 @@ const val sqlCreateTableTareas =
 const val sqlCreateTableCategorias=
     "CREATE TABLE IF NOT EXISTS $DB_TABLE_CATEGORIAS (" +
         " $COL_ID_CATE INTEGER PRIMARY KEY, " +
-        " $COL_TITULO_CATE TEXT, " +
+        " $COL_TITULO_CATE TEXT UNIQUE, " +
         " $COL_COLOR_CATE INTEGER " +
         " );"
 

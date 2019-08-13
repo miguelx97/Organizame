@@ -13,17 +13,23 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.miguelmartin.organizame.R
+import com.miguelmartin.organizame.bbdd.COL_TITULO_CATE
 import com.miguelmartin.organizame.bbdd.DbPersistenciaCategorias
 import com.miguelmartin.organizame.data.AppAdapterCategorias
 import com.miguelmartin.organizame.model.Categoria
+import com.miguelmartin.organizame.util.CLASE
+import com.miguelmartin.organizame.util.SHARE_PREFERENCES
 import kotlinx.android.synthetic.main.activity_gestion_categorias.*
 import petrov.kristiyan.colorpicker.ColorPicker
+
 
 var categoria = Categoria()
 
 class GestionCategoriasActivity : AppCompatActivity() {
     lateinit var gradientDrawable: GradientDrawable
     lateinit var dbPersistencia:DbPersistenciaCategorias
+    lateinit var categorias:ArrayList<Categoria>
+    lateinit var clase:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +41,8 @@ class GestionCategoriasActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = "Categorías"
 
+        clase = intent.getExtras().getString(CLASE).toString()
+
         lyColores.setOnClickListener { ocColorPicker() }
 
         btnAnadir.setOnClickListener {ocAnadir() }
@@ -42,10 +50,14 @@ class GestionCategoriasActivity : AppCompatActivity() {
         btnNuevo.setOnClickListener { ocNuevo() }
     }
 
-    private fun ocAnadir() {
+    private fun ocAnadir(){
         categoria.titulo = etTitulo.text.toString()
         Log.w("ocAnadir", categoria.toString())
-        if (!categoria.titulo.isNullOrEmpty()) {
+        if (categoria.titulo.isNullOrEmpty()) {
+            Toast.makeText(this, "Debes añadir un título", Toast.LENGTH_SHORT).show()
+        } else if(yaExiste(categoria.titulo!!)) {
+            Toast.makeText(this, "La categoría ya existe", Toast.LENGTH_SHORT).show()
+        } else{
             var res: Int
             var action: String
 
@@ -60,14 +72,16 @@ class GestionCategoriasActivity : AppCompatActivity() {
             if (res > 0) {
                 gradientDrawable = viewColor.getBackground().mutate() as GradientDrawable
                 Toast.makeText(this, "la categoría ha sido $action", Toast.LENGTH_LONG).show()
+                if (AddTareaActivity::class.toString().equals(clase)){
+                    finish()
+                } else{
+                    cargarItems("%")
+                }
                 limpiarCampos()
-                cargarItems("%")
 
             } else {
                 Toast.makeText(this, "ERROR", Toast.LENGTH_LONG).show()
             }
-        } else {
-            Toast.makeText(this, "Debes añadir un título", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -116,7 +130,7 @@ class GestionCategoriasActivity : AppCompatActivity() {
 
 
     private fun cargarItems(filtro:String) {
-        val categorias:ArrayList<Categoria> = dbPersistencia.getItems(filtro)
+        categorias = dbPersistencia.getItems(filtro)
         rellenarRecyclerCiew(categorias)
     }
 
@@ -144,5 +158,20 @@ class GestionCategoriasActivity : AppCompatActivity() {
         etTitulo.setText(categoriaAdap.titulo)
         gradientDrawable.setColor(categoriaAdap.color!!)
         btnAnadir.setText("Modificar")
+    }
+
+    fun yaExiste(nombre:String):Boolean{
+        categorias.forEach {
+            if (it.titulo.equals(nombre)) return true
+        }
+        return false
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return false
+    }
+    override fun onBackPressed() {
+        finish()
     }
 }

@@ -23,3 +23,9 @@ const val ESTADO_ELIMINADO = 3
 
 //CATEGORIAS
 const val SIN_CATEGORIA = -1
+
+//INTENTS
+val CLASE = "nombre_de_clase"
+
+//SHARE PREFERENCES
+const val SHARE_PREFERENCES = "myPreferences"
