@@ -147,16 +147,18 @@ class AddTareaActivity : AppCompatActivity() {
 
         listaCategorias = dbPersistenciaCategorias.getItems("%")
 
-        val presuntaNuevaCategoria = listaCategorias.last()
+        if(listaCategorias.isNotEmpty()){
+            val presuntaNuevaCategoria = listaCategorias.last()
 
-        if (presuntaNuevaCategoria.id != listaCategoriasOncreate.last().id){
-            Toast.makeText(this, presuntaNuevaCategoria.titulo, Toast.LENGTH_SHORT).show()
-            idCategoria = presuntaNuevaCategoria.id
-            categoria.titulo = presuntaNuevaCategoria.titulo
-            listaCategoriasOncreate = listaCategorias.toMutableList()
-            btnCategorias.text = presuntaNuevaCategoria.titulo
-            cambiarEstadoItem(btnCategorias, true);
+            if (presuntaNuevaCategoria.id != listaCategoriasOncreate.last().id){
+                idCategoria = presuntaNuevaCategoria.id
+                categoria.titulo = presuntaNuevaCategoria.titulo
+                listaCategoriasOncreate = listaCategorias.toMutableList()
+                btnCategorias.text = presuntaNuevaCategoria.titulo
+                cambiarEstadoItem(btnCategorias, true);
+            }
         }
+
 
     }
 
