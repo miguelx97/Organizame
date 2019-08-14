@@ -150,7 +150,7 @@ class AddTareaActivity : AppCompatActivity() {
         if(listaCategorias.isNotEmpty()){
             val presuntaNuevaCategoria = listaCategorias.last()
 
-            if (presuntaNuevaCategoria.id != listaCategoriasOncreate.last().id){
+            if (listaCategoriasOncreate.isEmpty() || presuntaNuevaCategoria.id != listaCategoriasOncreate.last().id){
                 idCategoria = presuntaNuevaCategoria.id
                 categoria.titulo = presuntaNuevaCategoria.titulo
                 listaCategoriasOncreate = listaCategorias.toMutableList()

@@ -2,6 +2,7 @@ package com.miguelmartin.organizame.activities
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -24,12 +26,14 @@ import petrov.kristiyan.colorpicker.ColorPicker
 
 
 var categoria = Categoria()
+var cateColor:Int = Color.WHITE
 
 class GestionCategoriasActivity : AppCompatActivity() {
     lateinit var gradientDrawable: GradientDrawable
     lateinit var dbPersistencia:DbPersistenciaCategorias
     lateinit var categorias:ArrayList<Categoria>
     lateinit var clase:String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +55,15 @@ class GestionCategoriasActivity : AppCompatActivity() {
     }
 
     private fun ocAnadir(){
-        categoria.titulo = etTitulo.text.toString()
-        Log.w("ocAnadir", categoria.toString())
-        if (categoria.titulo.isNullOrEmpty()) {
+        if (etTitulo.text.toString().isNullOrEmpty()) {
             Toast.makeText(this, "Debes añadir un título", Toast.LENGTH_SHORT).show()
-        } else if(yaExiste(categoria.titulo!!)) {
+        } else if(yaExiste()) {
             Toast.makeText(this, "La categoría ya existe", Toast.LENGTH_SHORT).show()
         } else{
+            categoria.titulo = etTitulo.text.toString()
+            categoria.color = cateColor
+            Log.w("ocAnadir", categoria.toString())
+
             var res: Int
             var action: String
 
@@ -107,25 +113,27 @@ class GestionCategoriasActivity : AppCompatActivity() {
         val colorPicker = ColorPicker(this)
         gradientDrawable  = viewColor.getBackground().mutate() as GradientDrawable
 
-        val colors: ArrayList<String> = arrayListOf("#FFFFFF", "#FFEBEE", "#FCE4EC", "#F3E5F5", "#EDE7F6", "#E8EAF6", "#E3F2FD", "#E1F5FE", "#E0F7FA", "#E0F2F1", "#E8F5E9", "#F1F8E9", "#F9FBE7", "#FFFDE7", "#FFF8E1", "#FFF3E0", "#FBE9E7", "#EFEBE9", "#ECEFF1")
+        val colors: ArrayList<String> = arrayListOf("#FFFFFF", "#FFEBEE", "#FCE4EC", "#F3E5F5", "#EDE7F6", "#E8EAF6", "#E3F2FD", "#E1F5FE", "#E0F7FA", "#E0F2F1", "#E8F5E9", "#F1F8E9", "#F9FBE7", "#FFFDE7", "#FFF8E1", "#FFF3E0", "#FBE9E7", "#EFEBE9", "#ECEFF1", "#f7f7f7")
 
         colorPicker
             .setColors(colors)
             .setColumns(4)
             .setRoundColorButton(true)
             .setDefaultColorButton(categoria.color!!)
-            .setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
-                override fun onCancel() {}
+            .setTitle("Escoge color")
+            .setOnFastChooseColorListener(object : ColorPicker.OnFastChooseColorListener {
 
-                override fun onChooseColor(position: Int, color: Int) {
-                    if(!(position != 0 && color == 0)){
-                        gradientDrawable.setColor(color)
-                        categoria.color = color
-                    }
-
+                override fun setOnFastChooseColorListener(position: Int, color: Int) {
+                    gradientDrawable.setColor(color)
+                    cateColor = color
                     colorPicker.dismissDialog()
                 }
-            }).show()
+
+                override fun onCancel() {}
+
+            })
+            .disableDefaultButtons(true)
+            .show()
     }
 
 
@@ -156,13 +164,14 @@ class GestionCategoriasActivity : AppCompatActivity() {
 
         categoria = categoriaAdap
         etTitulo.setText(categoriaAdap.titulo)
+        cateColor = categoriaAdap.color!!
         gradientDrawable.setColor(categoriaAdap.color!!)
         btnAnadir.setText("Modificar")
     }
 
-    fun yaExiste(nombre:String):Boolean{
+    fun yaExiste():Boolean{
         categorias.forEach {
-            if (it.titulo.equals(nombre)) return true
+            if (it.titulo!!.equals(etTitulo.text.toString()) && it.id != categoria.id ) return true
         }
         return false
     }
