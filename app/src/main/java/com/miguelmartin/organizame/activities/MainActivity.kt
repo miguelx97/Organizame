@@ -177,6 +177,7 @@ class MainActivity : AppCompatActivity() {
             val limpiarCategorias = Categoria(SIN_CATEGORIA, "Todo", Color.WHITE)
             categorias.add(0,limpiarCategorias)
             rellenarRecyclerViewCategorias(categorias)
+            rvCategorias.visibility = View.VISIBLE
         } else{
             rvCategorias.visibility = View.GONE
         }
